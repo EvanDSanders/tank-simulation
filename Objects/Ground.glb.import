@@ -1,0 +1,60 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://mdou2ofr3aa"
+path="res://.godot/imported/Ground.glb-d2ee7fa1a90237bdd24ae8aa7542e146.scn"
+
+[deps]
+
+source_file="res://Objects/Ground.glb"
+dest_files=["res://.godot/imported/Ground.glb-d2ee7fa1a90237bdd24ae8aa7542e146.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"nodes": {
+"PATH:Cube_005": {
+"generate/physics": true,
+"physics/layer": 3,
+"physics/mask": 3
+},
+"PATH:Ground": {
+"generate/physics": true,
+"physics/layer": 3,
+"physics/mask": 3
+},
+"PATH:NurbsPath_001": {
+"generate/physics": true,
+"physics/layer": 3,
+"physics/mask": 3
+}
+}
+}
+gltf/naming_version=2
+gltf/embedded_image_handling=1

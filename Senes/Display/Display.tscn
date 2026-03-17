@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://d14j24iryjere"]
+
+[ext_resource type="Script" uid="uid://gol5qvstovh3" path="res://Scripts/display.gd" id="1_8oi6u"]
+[ext_resource type="Theme" uid="uid://c0wsmkaots3ab" path="res://Themes/Control3D.tres" id="2_8fey7"]
+[ext_resource type="Shader" uid="uid://b1qbfq8it61y5" path="res://Shaders/Display.gdshader" id="2_g2125"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_a16vj"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uv5kl"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_g2125")
+shader_parameter/texture_ = SubResource("ViewportTexture_a16vj")
+shader_parameter/size = Vector2(1, 1)
+shader_parameter/scale = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_g2125"]
+material = SubResource("ShaderMaterial_uv5kl")
+size = Vector2(1.5, 1)
+
+[node name="Display" type="Node3D" unique_id=638512162]
+script = ExtResource("1_8oi6u")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=26206189]
+transform = Transform3D(-0.4828359, 0, 4.2210853e-08, 0, 0.4828359, 0, -4.2210853e-08, 0, -0.4828359, 0, 0.42837644, 0)
+mesh = SubResource("QuadMesh_g2125")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=978793512]
+size = Vector2i(768, 512)
+
+[node name="Control" type="Control" parent="." unique_id=252280864]
+custom_minimum_size = Vector2(384, 256)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 384.0
+offset_bottom = 256.0
+scale = Vector2(2, 2)
+theme = ExtResource("2_8fey7")
+
+[node name="TextEdit" type="TextEdit" parent="Control" unique_id=1441851008]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Hello Chat!
+This is a Text Box... not"

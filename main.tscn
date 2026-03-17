@@ -1,0 +1,190 @@
+[gd_scene format=3 uid="uid://by32bnf1goce5"]
+
+[ext_resource type="PackedScene" uid="uid://b4l1gcny6oyv0" path="res://Senes/Empty.tscn" id="1_1bvp3"]
+[ext_resource type="Script" uid="uid://xfhvhdmik5bt" path="res://Scripts/gear_shift.gd" id="1_272bh"]
+[ext_resource type="PackedScene" uid="uid://o8a760rn1sm8" path="res://Senes/TankTrack.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://0qgppok3210l" path="res://Scripts/exporter.gd" id="1_lquwl"]
+[ext_resource type="Script" uid="uid://cut7m668naswx" path="res://Scripts/follow_cam.gd" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://cwb5c63p1oavc" path="res://Senes/TrackingPoint.tscn" id="3_7mycd"]
+[ext_resource type="PackedScene" uid="uid://mdou2ofr3aa" path="res://Objects/Ground.glb" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://2h4lqlei2xso" path="res://Senes/Display/Debug.tscn" id="7_272bh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_0xm2m"]
+sky_material = SubResource("ProceduralSkyMaterial_ig7tw")
+
+[sub_resource type="Environment" id="Environment_h2yge"]
+background_mode = 2
+sky = SubResource("Sky_0xm2m")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
+size = Vector3(1.1347656, 0.49316406, 2.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
+size = Vector3(1.135, 0.489, 2.194)
+
+[sub_resource type="GDScript" id="GDScript_7mycd"]
+script/source = "extends MeshInstance3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	self.rotate_x( Input.get_axis(\"Camera Up\", \"Camera Down\")/30 )
+"
+
+[sub_resource type="GDScript" id="GDScript_272bh"]
+script/source = "extends MeshInstance3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	self.rotation = $\"../../Frame/TrackingPoint\".rotation
+	pass
+"
+
+[sub_resource type="GDScript" id="GDScript_lquwl"]
+script/source = "extends Timer
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_timeout() -> void:
+	print(Engine.get_frames_per_second())
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5vw27"]
+size = Vector3(336.8, 0.9870081, 472.487)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5vw27"]
+size = Vector2(336.445, 500)
+
+[node name="Node3D" type="Node3D" unique_id=1645720919]
+script = ExtResource("1_lquwl")
+
+[node name="Ground2" parent="." unique_id=1595063440 instance=ExtResource("3_h2yge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00014519691, -1.1920929e-07, -0.004176855)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1339002733]
+environment = SubResource("Environment_h2yge")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=324037112]
+transform = Transform3D(0.6320699, 0.51273197, -0.5810281, 0, 0.7497994, 0.66166526, 0.7749114, -0.41821867, 0.4739256, 0, 2.0501366, 2.1832013)
+
+[node name="Frame" type="RigidBody3D" parent="." unique_id=648524429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.61281765, 0)
+collision_layer = 0
+collision_mask = 2
+mass = 20.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Frame" unique_id=101412478]
+shape = SubResource("BoxShape3D_ig7tw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Frame" unique_id=139604968]
+mesh = SubResource("BoxMesh_ig7tw")
+
+[node name="Camera Track" parent="Frame" unique_id=2000655743 instance=ExtResource("1_1bvp3")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.33945304, 0)
+surface_material_override/0 = null
+
+[node name="TrackingPoint" parent="Frame" unique_id=156021648 instance=ExtResource("3_7mycd")]
+t_name = "Hull"
+facing = Vector3(3.145, 0, 0)
+
+[node name="GearShifter" type="Node" parent="." unique_id=1506950147 node_paths=PackedStringArray("track_L", "track_R")]
+script = ExtResource("1_272bh")
+track_L = NodePath("../Tank Track L")
+track_R = NodePath("../Tank Track R")
+metadata/_custom_type_script = "uid://xfhvhdmik5bt"
+
+[node name="Timer" type="Timer" parent="GearShifter" unique_id=1333723686]
+wait_time = 0.5
+one_shot = true
+
+[node name="Tank Track L" parent="." unique_id=2033837891 node_paths=PackedStringArray("mount", "debug") instance=ExtResource("1_ig7tw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0, 0)
+mount = NodePath("../Frame")
+debug = NodePath("../Control")
+
+[node name="Tank Track R" parent="." unique_id=366810390 node_paths=PackedStringArray("mount", "debug") instance=ExtResource("1_ig7tw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0, 0)
+mount = NodePath("../Frame")
+isRight = true
+debug = NodePath("../Control2")
+
+[node name="Camera Track2" parent="." unique_id=895943255 instance=ExtResource("1_1bvp3")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.538044, 0)
+skeleton = NodePath("../Frame")
+surface_material_override/0 = null
+script = ExtResource("2_0xm2m")
+
+[node name="Camera Track3" parent="Camera Track2" unique_id=1110911477 instance=ExtResource("1_1bvp3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+skeleton = NodePath("../../Frame")
+surface_material_override/0 = null
+script = SubResource("GDScript_7mycd")
+
+[node name="Camera3D" type="Camera3D" parent="Camera Track2/Camera Track3" unique_id=1643063543]
+transform = Transform3D(-1, 8.742278e-08, -3.821371e-15, 0, -4.371139e-08, -1, -8.742278e-08, -1, 4.371139e-08, 0, -2.7093484, 0)
+
+[node name="TrackingPoint" parent="Camera Track2/Camera Track3/Camera3D" unique_id=1741484053 instance=ExtResource("3_7mycd")]
+t_name = "Camera"
+
+[node name="Camera Track4" parent="Camera Track2" unique_id=1940296472 instance=ExtResource("1_1bvp3")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+skeleton = NodePath("../../Frame")
+surface_material_override/0 = null
+script = SubResource("GDScript_272bh")
+
+[node name="Timer" type="Timer" parent="." unique_id=1122194785]
+autostart = true
+script = SubResource("GDScript_lquwl")
+
+[node name="Control" parent="." unique_id=320973508 instance=ExtResource("7_272bh")]
+
+[node name="Control2" parent="." unique_id=564030619 instance=ExtResource("7_272bh")]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -200.0
+offset_right = 0.0
+offset_bottom = 340.0
+grow_horizontal = 0
+
+[node name="RigidBody3D" type="StaticBody3D" parent="." unique_id=1410484668]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.21558237, 0)
+collision_layer = 15
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=484510533]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.504652, -235.74326)
+shape = SubResource("BoxShape3D_5vw27")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/CollisionShape3D" unique_id=1049222352]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5061082, 0)
+mesh = SubResource("PlaneMesh_5vw27")
+
+[connection signal="timeout" from="GearShifter/Timer" to="GearShifter" method="_on_timer_timeout"]
+[connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]

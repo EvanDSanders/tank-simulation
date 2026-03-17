@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://c447fet13veaw"]
+
+[ext_resource type="Script" uid="uid://dpk8fp2c3vhb3" path="res://Scripts/tank_wheel.gd" id="1_dpi24"]
+[ext_resource type="PackedScene" uid="uid://dvd265m0w0uet" path="res://Senes/Wheel.tscn" id="1_pbo2i"]
+[ext_resource type="PackedScene" uid="uid://cmgo0h2c8vxnm" path="res://Senes/JointBase.tscn" id="2_dpi24"]
+[ext_resource type="Script" uid="uid://b0uadrnonqrwp" path="res://Scripts/wheel_integration.gd" id="3_nupkk"]
+[ext_resource type="PackedScene" uid="uid://cwb5c63p1oavc" path="res://Senes/TrackingPoint.tscn" id="4_msu3h"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_msu3h"]
+
+[node name="TankWheel" type="Node3D" unique_id=1115414723]
+script = ExtResource("1_dpi24")
+
+[node name="Wheel" parent="." unique_id=2090089190 instance=ExtResource("1_pbo2i")]
+physics_material_override = SubResource("PhysicsMaterial_msu3h")
+script = ExtResource("3_nupkk")
+
+[node name="TrackingPoint" parent="Wheel" unique_id=156021648 instance=ExtResource("4_msu3h")]
+facing = Vector3(0, 1.571, 0)
+
+[node name="Spring" type="Generic6DOFJoint3D" parent="." unique_id=1108390385]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26974523, 0)
+node_b = NodePath("../Wheel Base")
+linear_limit_y/upper_distance = 0.1
+linear_limit_y/lower_distance = -0.1
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 1000.0
+linear_spring_y/damping = 50.0
+linear_spring_y/equilibrium_point = -0.025
+angular_spring_x/stiffness = 55.685
+angular_spring_x/damping = 23.04
+angular_spring_y/stiffness = 51.125
+angular_spring_y/damping = 3.445
+angular_spring_z/stiffness = 57.645
+angular_spring_z/damping = 1.84
+
+[node name="Wheel Base" parent="." unique_id=2108097296 instance=ExtResource("2_dpi24")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36136204, 0)
+
+[node name="TrackingPoint" parent="Wheel Base" unique_id=1241406018 instance=ExtResource("4_msu3h")]
+facing = Vector3(1.571, 0, 0)
+
+[node name="Axel" type="Generic6DOFJoint3D" parent="." unique_id=1009476465]
+node_a = NodePath("../Wheel Base")
+node_b = NodePath("../Wheel")
+angular_limit_x/enabled = false
+angular_motor_x/force_limit = 0.0

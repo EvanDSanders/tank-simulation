@@ -1,0 +1,64 @@
+[gd_resource type="Theme" format=3 uid="uid://c0wsmkaots3ab"]
+
+[ext_resource type="StyleBox" uid="uid://binenydmn7c5d" path="res://Themes/BoxHover.tres" id="1_dsmm4"]
+[ext_resource type="StyleBox" uid="uid://bpr4x2vdsrrs0" path="res://Themes/BoxDisabled.tres" id="1_t6o33"]
+[ext_resource type="StyleBox" uid="uid://dhhh226dwceuj" path="res://Themes/BoxPressedHover.tres" id="2_t6o33"]
+[ext_resource type="StyleBox" uid="uid://b65t5j3uecmp2" path="res://Themes/BoxMain.tres" id="3_85w5s"]
+[ext_resource type="StyleBox" uid="uid://ba0pxlwmbye70" path="res://Themes/BoxPressed.tres" id="4_pp5xb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yjoql"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dsmm4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t6o33"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_85w5s"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1mc26"]
+bg_color = Color(1, 1, 1, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[resource]
+BoxContainer/constants/separation = 4
+Button/colors/font_disabled_color = Color(0.4, 0.4, 0.4, 1)
+Button/styles/disabled = ExtResource("1_t6o33")
+Button/styles/focus = SubResource("StyleBoxEmpty_yjoql")
+Button/styles/hover = ExtResource("1_dsmm4")
+Button/styles/hover_pressed = ExtResource("2_t6o33")
+Button/styles/normal = ExtResource("3_85w5s")
+Button/styles/pressed = ExtResource("4_pp5xb")
+HSeparator/constants/separation = 18
+HSeparator/styles/separator = SubResource("StyleBoxEmpty_dsmm4")
+HSlider/styles/grabber_area = SubResource("StyleBoxEmpty_t6o33")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxEmpty_85w5s")
+LineEdit/constants/caret_width = 0
+LineEdit/constants/minimum_character_width = 0
+LineEdit/constants/outline_size = 0
+LineEdit/font_sizes/font_size = 16
+LineEdit/styles/focus = SubResource("StyleBoxFlat_1mc26")
+LineEdit/styles/normal = ExtResource("3_85w5s")
+MarginContainer/constants/margin_bottom = 4
+MarginContainer/constants/margin_left = 4
+MarginContainer/constants/margin_right = 4
+MarginContainer/constants/margin_top = 4
+Panel/styles/normal = ExtResource("3_85w5s")
+Panel/styles/panel = ExtResource("3_85w5s")
+PanelContainer/styles/panel = ExtResource("3_85w5s")
+PopupMenu/styles/hover = ExtResource("1_dsmm4")
+PopupMenu/styles/panel = ExtResource("3_85w5s")
+ProgressBar/styles/background = ExtResource("3_85w5s")
+ProgressBar/styles/fill = ExtResource("4_pp5xb")
+SpinBox/constants/buttons_vertical_separation = 0
+SpinBox/constants/buttons_width = 12
+SpinBox/constants/field_and_buttons_separation = 0
+SpinBox/constants/set_min_buttons_width_from_icons = 0
+TextEdit/styles/focus = null
+TextEdit/styles/normal = ExtResource("3_85w5s")

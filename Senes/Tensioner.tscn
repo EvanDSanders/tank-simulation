@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://dhrajt2fv67ll"]
+
+[ext_resource type="Script" uid="uid://dpk8fp2c3vhb3" path="res://Scripts/tank_wheel.gd" id="1_0q2hs"]
+[ext_resource type="PackedScene" uid="uid://bejrl68ge5y2l" path="res://Senes/TensionWheel.tscn" id="2_vd66q"]
+[ext_resource type="PackedScene" uid="uid://cwb5c63p1oavc" path="res://Senes/TrackingPoint.tscn" id="4_0nf1x"]
+[ext_resource type="PackedScene" uid="uid://cmgo0h2c8vxnm" path="res://Senes/JointBase.tscn" id="5_8dgpm"]
+
+[node name="TankWheel" type="Node3D" unique_id=1115414723]
+script = ExtResource("1_0q2hs")
+
+[node name="Wheel" parent="." unique_id=2090089190 instance=ExtResource("2_vd66q")]
+collision_layer = 8
+collision_mask = 0
+
+[node name="TrackingPoint" parent="Wheel" unique_id=156021648 instance=ExtResource("4_0nf1x")]
+facing = Vector3(0, 1.571, 0)
+
+[node name="Spring" type="Generic6DOFJoint3D" parent="." unique_id=1108390385]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24006048, 0)
+node_b = NodePath("../Wheel Base")
+linear_limit_y/lower_distance = -0.2
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 200.0
+linear_spring_y/damping = 20.0
+linear_spring_y/equilibrium_point = -0.25
+angular_spring_x/stiffness = 55.685
+angular_spring_x/damping = 23.04
+angular_spring_y/stiffness = 51.125
+angular_spring_y/damping = 3.445
+angular_spring_z/stiffness = 57.645
+angular_spring_z/damping = 1.84
+
+[node name="Wheel Base" parent="." unique_id=2108097296 instance=ExtResource("5_8dgpm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2360523, 0)
+mass = 0.5
+
+[node name="TrackingPoint" parent="Wheel Base" unique_id=1241406018 instance=ExtResource("4_0nf1x")]
+facing = Vector3(1.571, 0, 0)
+
+[node name="Axel" type="Generic6DOFJoint3D" parent="." unique_id=1009476465]
+node_a = NodePath("../Wheel Base")
+node_b = NodePath("../Wheel")
+angular_limit_x/enabled = false
+angular_motor_x/force_limit = 0.0

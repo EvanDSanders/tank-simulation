@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://2h4lqlei2xso"]
+
+[ext_resource type="Theme" uid="uid://c0wsmkaots3ab" path="res://Themes/Control3D.tres" id="1_wspiy"]
+[ext_resource type="Script" uid="uid://dbmhte4u6u0s5" path="res://Scripts/debug.gd" id="2_h2fke"]
+[ext_resource type="FontFile" uid="uid://drafk2ct26w7t" path="res://FiraCodeNerdFontMono-Light.ttf" id="3_j7a1y"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_dd758"]
+font = ExtResource("3_j7a1y")
+
+[node name="Control" type="Control" unique_id=320973508]
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 300.0
+offset_bottom = 200.0
+theme = ExtResource("1_wspiy")
+script = ExtResource("2_h2fke")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=691227045]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1235546964]
+layout_mode = 2
+
+[node name="Input" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1410656066]
+layout_mode = 2
+text = " Hello Chat!"
+label_settings = SubResource("LabelSettings_dd758")
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer" unique_id=2111297551]
+layout_mode = 2
+text = " Hello Chat!"
+label_settings = SubResource("LabelSettings_dd758")
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="PanelContainer/VBoxContainer" unique_id=72990458]
+layout_mode = 2
+text = " Hello Chat!"
+label_settings = SubResource("LabelSettings_dd758")
+horizontal_alignment = 1
+
+[node name="Label4" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1089270510]
+layout_mode = 2
+text = " Hello Chat!"
+label_settings = SubResource("LabelSettings_dd758")
+horizontal_alignment = 1
+
+[node name="Label5" type="Label" parent="PanelContainer/VBoxContainer" unique_id=14639709]
+layout_mode = 2
+text = " Hello Chat!"
+label_settings = SubResource("LabelSettings_dd758")
+horizontal_alignment = 1
+
+[node name="Label6" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1422467492]
+layout_mode = 2
+text = " Hello Chat!"
+label_settings = SubResource("LabelSettings_dd758")
+horizontal_alignment = 1
