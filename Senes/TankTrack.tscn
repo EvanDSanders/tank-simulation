@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://o8a760rn1sm8"]
 
-[ext_resource type="Script" uid="uid://beayosoqteuap" path="res://Scripts/track_hub.gd" id="1_5gegn"]
+[ext_resource type="Script" uid="uid://cvrb1dgrlrhby" path="res://Scripts/track_hub.gd" id="1_5gegn"]
 [ext_resource type="PackedScene" uid="uid://c447fet13veaw" path="res://Senes/TankWheel.tscn" id="1_16qp6"]
-[ext_resource type="Script" uid="uid://b0uadrnonqrwp" path="res://Scripts/wheel_integration.gd" id="2_ksg0j"]
+[ext_resource type="Script" uid="uid://cgspvpgt43ak7" path="res://Scripts/drive_wheel.gd" id="2_p8x4c"]
 [ext_resource type="PackedScene" uid="uid://cl8hummb4ogfo" path="res://Objects/Drive Wheel.glb" id="3_ksg0j"]
 [ext_resource type="PackedScene" uid="uid://cwb5c63p1oavc" path="res://Senes/TrackingPoint.tscn" id="4_p8x4c"]
 
@@ -25,7 +25,7 @@ node_b = NodePath("../Track Base")
 angular_limit_x/upper_angle = 0.43633232
 angular_limit_x/lower_angle = -0.43633232
 angular_spring_x/enabled = true
-angular_spring_x/stiffness = 500.0
+angular_spring_x/stiffness = 507.635
 angular_spring_x/damping = 100.0
 
 [node name="Wheel" type="RigidBody3D" parent="." unique_id=2090089190]
@@ -33,8 +33,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -1.4000001)
 collision_layer = 9
 collision_mask = 2
 mass = 2.0
-script = ExtResource("2_ksg0j")
-radius_ratio = 1.2
+custom_integrator = true
+script = ExtResource("2_p8x4c")
 
 [node name="Drive Wheel" parent="Wheel" unique_id=1674496786 instance=ExtResource("3_ksg0j")]
 
@@ -51,7 +51,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -1.4000001)
 node_a = NodePath("../Track Base")
 node_b = NodePath("../Wheel")
 angular_limit_x/enabled = false
-angular_motor_x/force_limit = 50.0
+angular_motor_x/force_limit = 0.0
 
 [node name="TankWheel" parent="." unique_id=1115414723 node_paths=PackedStringArray("mount") instance=ExtResource("1_16qp6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -1)

@@ -20,6 +20,8 @@ func _ready() -> void:
 		spring.node_a = spring.get_path_to(mount)
 		
 	
+func _rigidBodyProvider():
+	return $Wheel
 
 
 	#motor.set_flag_x(Generic6DOFJoint3D.FLAG_ENABLE_MOTOR, true)

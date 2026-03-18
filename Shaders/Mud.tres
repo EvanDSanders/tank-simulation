@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c7m2ne3uqjqe0"]
+
+[ext_resource type="Texture2D" uid="uid://c3luiv35sfpxb" path="res://Objects/Textures/Mud_Bake1_PBR_Diffuse.png" id="1_ckm0f"]
+
+[resource]
+albedo_texture = ExtResource("1_ckm0f")

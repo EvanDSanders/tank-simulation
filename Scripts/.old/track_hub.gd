@@ -10,8 +10,23 @@ var wheel_speeds: Array[float]
 var wheel_angles: Array[float]
 var consensus: float = 0.0
 
+
+@export var drive_speed: float = 0.0   # commanded track surface speed
+@export var max_accel: float = 50
+@export var max_decel: float = 50
+@export var max_speed: float = 30.0
+@export var drag_coeff: float = 0.4
+@export var coast_when_neutral: bool = true  # when true, releasing throttle keeps current speed instead of braking
+@export var turn_rate: float = 1.0
+
+
+
+@export var debug: Control
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	debug.isRight = isRight
+		
 	if pivot:
 		pivot.node_a = pivot.get_path_to(mount)
 		
@@ -42,12 +57,61 @@ func get_consensus() -> float:
 func get_master_angle() -> float:
 	return self.wheel_angles[0]
 
+
+var frame: int = 0
 func _physics_process(delta: float) -> void:
-	var measured = 0
+	var measured = 0.0
 	for s in wheel_speeds:
 		measured += s
-	measured /= wheel_speeds.size()
+	if wheel_speeds.size() > 0:
+		measured /= wheel_speeds.size()
+
+	# Input in [-1, 1] as throttle
+	var power := Globals.throttle()
+	var steer := Globals.steer(isRight)
 	
-	var input = Globals.input(isRight)
-	
-	consensus = Globals.lerp(measured, input, 0.1)
+	var throttle := power * 1 # + steer * 0.2
+
+
+	# Target speed from throttle (simple linear “gear” model)
+	var target_speed := throttle * max_speed
+	if coast_when_neutral and abs(throttle) < 0.01:
+		target_speed = drive_speed  # maintain current speed — coast
+
+	# Drag/rolling resistance (opposes current speed); use drive_speed so both tracks get same drag and stay in sync
+	var drag: float = -drive_speed * Globals.remap(0, 1, drag_coeff, 0, abs(power))
+
+	# Desired change in speed
+	var desired_accel := (target_speed - drive_speed) * 4.0   # "engine" trying to reach target
+	desired_accel += drag
+
+	# Clamp accel for realism: decel when slowing down (reducing |speed|), accel when speeding up
+	# Slowing down = accel opposes current direction (drive_speed * desired_accel < 0)
+	var slowing_down := drive_speed * desired_accel < 0.0
+	var accel_limit := max_decel if slowing_down else max_accel
+	desired_accel = clamp(desired_accel, -accel_limit, accel_limit)
+
+	# Integrate to get new drive_speed
+	drive_speed += desired_accel * delta
+	drive_speed = clamp(drive_speed, -max_speed, max_speed)
+
+	# Steer adds differential: target speed for this track = base + steer offset
+	var steer_amount: float = steer * 10.0 * (1.0 + abs(drive_speed) / max_speed) * turn_rate
+	var target_consensus := drive_speed + steer_amount
+	# Blend toward target so flipping steer immediately pulls consensus the right way
+	consensus = lerpf(measured, target_consensus, 0.35)
+
+
+
+
+	if frame % 4 == 0:
+		# Debug
+		debug.throttle = throttle
+		debug.target_speed = target_speed
+		debug.drag = drag
+		debug.desired_accel = desired_accel
+		debug.accel_limit = accel_limit
+		debug.drive_speed = drive_speed
+		debug.blended = consensus
+
+	frame += 1

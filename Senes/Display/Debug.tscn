@@ -1,63 +1,83 @@
 [gd_scene format=3 uid="uid://2h4lqlei2xso"]
 
 [ext_resource type="Theme" uid="uid://c0wsmkaots3ab" path="res://Themes/Control3D.tres" id="1_wspiy"]
-[ext_resource type="Script" uid="uid://dbmhte4u6u0s5" path="res://Scripts/debug.gd" id="2_h2fke"]
+[ext_resource type="Script" uid="uid://dagmons528vt7" path="res://Scripts/debug.gd" id="2_j7a1y"]
 [ext_resource type="FontFile" uid="uid://drafk2ct26w7t" path="res://FiraCodeNerdFontMono-Light.ttf" id="3_j7a1y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j7a1y"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.52156866, 0.52156866, 0.52156866, 0.78431374)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="LabelSettings" id="LabelSettings_dd758"]
 font = ExtResource("3_j7a1y")
 
 [node name="Control" type="Control" unique_id=320973508]
-custom_minimum_size = Vector2(300, 200)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 300.0
-offset_bottom = 200.0
 theme = ExtResource("1_wspiy")
-script = ExtResource("2_h2fke")
+script = ExtResource("2_j7a1y")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=691227045]
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -63.5
+offset_right = 63.5
+offset_bottom = 28.0
 grow_horizontal = 2
-grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1235546964]
 layout_mode = 2
 
+[node name="ThrottleBox" type="Panel" parent="PanelContainer/VBoxContainer" unique_id=744893798]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+
+[node name="Throttle" type="Panel" parent="PanelContainer/VBoxContainer/ThrottleBox" unique_id=1115617519]
+modulate = Color(1, 0.6166667, 0, 1)
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -232.3525
+offset_right = 232.35248
+offset_bottom = 18.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_j7a1y")
+
+[node name="SteerBox" type="Panel" parent="PanelContainer/VBoxContainer" unique_id=1756686723]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+
+[node name="Steer" type="Panel" parent="PanelContainer/VBoxContainer/SteerBox" unique_id=456607391]
+modulate = Color(1, 0.6166667, 0, 1)
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -232.3525
+offset_right = 232.35248
+offset_bottom = 18.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_j7a1y")
+
 [node name="Input" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1410656066]
-layout_mode = 2
-text = " Hello Chat!"
-label_settings = SubResource("LabelSettings_dd758")
-horizontal_alignment = 1
-
-[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer" unique_id=2111297551]
-layout_mode = 2
-text = " Hello Chat!"
-label_settings = SubResource("LabelSettings_dd758")
-horizontal_alignment = 1
-
-[node name="Label3" type="Label" parent="PanelContainer/VBoxContainer" unique_id=72990458]
-layout_mode = 2
-text = " Hello Chat!"
-label_settings = SubResource("LabelSettings_dd758")
-horizontal_alignment = 1
-
-[node name="Label4" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1089270510]
-layout_mode = 2
-text = " Hello Chat!"
-label_settings = SubResource("LabelSettings_dd758")
-horizontal_alignment = 1
-
-[node name="Label5" type="Label" parent="PanelContainer/VBoxContainer" unique_id=14639709]
-layout_mode = 2
-text = " Hello Chat!"
-label_settings = SubResource("LabelSettings_dd758")
-horizontal_alignment = 1
-
-[node name="Label6" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1422467492]
 layout_mode = 2
 text = " Hello Chat!"
 label_settings = SubResource("LabelSettings_dd758")

@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://dfwkujqlyo25s"]
+
+[ext_resource type="Script" uid="uid://bfqg3n3ept8kc" path="res://Scripts/link_bar.gd" id="1_ld5mn"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_vis57"]
+resource_local_to_scene = true
+size = Vector3(0.05, 0.05, 0.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vis57"]
+resource_local_to_scene = true
+size = Vector3(0.2, 0.2, 0.2)
+
+[node name="LinkBar" type="Node3D" unique_id=2052527844]
+script = ExtResource("1_ld5mn")
+
+[node name="Link A" type="Generic6DOFJoint3D" parent="." unique_id=1017163190]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.20000002)
+node_b = NodePath("../Link Body")
+linear_limit_z/enabled = false
+linear_spring_x/enabled = true
+linear_spring_x/stiffness = 50.0
+linear_spring_x/damping = 50.0
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 50.0
+linear_spring_y/damping = 50.0
+linear_spring_z/enabled = true
+linear_spring_z/stiffness = 5.0
+linear_spring_z/damping = 5.0
+angular_limit_x/enabled = false
+
+[node name="Marker A" type="MeshInstance3D" parent="Link A" unique_id=1592907721]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2964211, 0, 0)
+mesh = SubResource("BoxMesh_vis57")
+skeleton = NodePath("../../Link Body")
+
+[node name="Link B" type="Generic6DOFJoint3D" parent="." unique_id=1750361135]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.20000002)
+node_b = NodePath("../Link Body")
+linear_limit_z/enabled = false
+linear_spring_x/enabled = true
+linear_spring_x/stiffness = 50.0
+linear_spring_x/damping = 50.0
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 50.0
+linear_spring_y/damping = 50.0
+linear_spring_z/enabled = true
+linear_spring_z/stiffness = 5.0
+linear_spring_z/damping = 5.0
+angular_limit_x/enabled = false
+
+[node name="Marker B" type="MeshInstance3D" parent="Link B" unique_id=271155985]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2964211, 0, 0)
+mesh = SubResource("BoxMesh_vis57")
+skeleton = NodePath("../../Link Body")
+
+[node name="Link Body" type="RigidBody3D" parent="." unique_id=1630603264]
+collision_layer = 0
+collision_mask = 0
+mass = 0.1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Link Body" unique_id=968993368]
+shape = SubResource("BoxShape3D_vis57")
+
+[node name="Bar" type="MeshInstance3D" parent="Link Body" unique_id=938787340]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26714617, 0, 0)
+mesh = SubResource("BoxMesh_vis57")

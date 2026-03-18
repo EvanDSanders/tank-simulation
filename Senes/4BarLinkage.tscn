@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dl8hqaw1slrh1"]
+
+[ext_resource type="Script" uid="uid://ci2lr4xb8flet" path="res://Scripts/4-bar-link.gd" id="1_vis57"]
+
+[node name="4 Bar Linkage" type="Node3D" unique_id=1963198205]
+script = ExtResource("1_vis57")
+
+[node name="Marker3D" type="Marker3D" parent="." unique_id=2042386520]
+gizmo_extents = 0.1

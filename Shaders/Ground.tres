@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://7wqjlv80r1tj"]
+
+[ext_resource type="Texture2D" uid="uid://bcvc4fn1ten6w" path="res://Objects/Textures/Ground_Bake1_PBR_Diffuse.png" id="1_fwx47"]
+
+[resource]
+resource_name = "Material"
+cull_mode = 2
+albedo_texture = ExtResource("1_fwx47")
+roughness = 0.66129035

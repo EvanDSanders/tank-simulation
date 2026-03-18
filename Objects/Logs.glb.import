@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://mdou2ofr3aa"
-path="res://.godot/imported/Ground.glb-d2ee7fa1a90237bdd24ae8aa7542e146.scn"
+uid="uid://hhfl2q4tmc5x"
+path="res://.godot/imported/Logs.glb-dd534fb5b1dfde7695f9423a0e33d0a9.scn"
 
 [deps]
 
-source_file="res://Objects/Ground.glb"
-dest_files=["res://.godot/imported/Ground.glb-d2ee7fa1a90237bdd24ae8aa7542e146.scn"]
+source_file="res://Objects/Logs.glb"
+dest_files=["res://.godot/imported/Logs.glb-dd534fb5b1dfde7695f9423a0e33d0a9.scn"]
 
 [params]
 
@@ -37,14 +37,6 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={
-"nodes": {
-"PATH:Ground": {
-"generate/physics": true,
-"physics/layer": 3,
-"physics/mask": 3
-}
-}
-}
+_subresources={}
 gltf/naming_version=2
 gltf/embedded_image_handling=1

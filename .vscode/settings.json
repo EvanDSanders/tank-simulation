@@ -1,0 +1,10 @@
+{ 
+    "files.exclude": {
+        "**/*.gd.uid": true,
+        "**/*.gdshader*.uid": true,
+        "**/*.glb.import": true,
+        "**/*.png.import": true,
+        "**/*.svg.import": true,
+        "**/*.ttf.import": true,
+    }
+}
