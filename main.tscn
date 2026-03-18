@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bcvc4fn1ten6w" path="res://Objects/Textures/Ground_Bake1_PBR_Diffuse.png" id="5_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://2h4lqlei2xso" path="res://Senes/Display/Debug.tscn" id="7_272bh"]
 [ext_resource type="Script" uid="uid://2qtcgar5d57u" path="res://Scripts/engine.gd" id="7_efxa6"]
+[ext_resource type="Script" uid="uid://buk0sjennpxkw" path="res://Scripts/controller.gd" id="8_dg77c"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_w48qg"]
 _surfaces = [{
@@ -194,24 +195,6 @@ func _process(delta: float) -> void:
 	pass
 "
 
-[sub_resource type="GDScript" id="GDScript_lquwl"]
-script/source = "extends Timer
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
-func _on_timeout() -> void:
-	print(Engine.get_frames_per_second())
-"
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_5vw27"]
 size = Vector3(336.8, 0.9870081, 472.487)
 
@@ -252,6 +235,10 @@ diagnostics = NodePath("../Control")
 left_track_hub = NodePath("../Tank Track L")
 right_track_hub = NodePath("../Tank Track R")
 metadata/_custom_type_script = "uid://2qtcgar5d57u"
+
+[node name="DualSenseCtl" type="Node" parent="TankEngine" unique_id=836875613]
+script = ExtResource("8_dg77c")
+metadata/_custom_type_script = "uid://buk0sjennpxkw"
 
 [node name="Frame" type="RigidBody3D" parent="." unique_id=648524429]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.61281765, 0)
@@ -306,12 +293,8 @@ skeleton = NodePath("../../Frame")
 surface_material_override/0 = null
 script = SubResource("GDScript_272bh")
 
-[node name="Timer" type="Timer" parent="." unique_id=1122194785]
-autostart = true
-script = SubResource("GDScript_lquwl")
-
 [node name="RigidBody3D" type="StaticBody3D" parent="." unique_id=1410484668]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.21558237, -107.36046)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.497396, -107.36046)
 collision_layer = 15
 collision_mask = 15
 
@@ -344,7 +327,5 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=707967383]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49829832, 0)
 shape = SubResource("BoxShape3D_efxa6")
-
-[connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]
 
 [editable path="Ground2"]

@@ -82,6 +82,16 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 	var consensus: float = _compute_consensus(drive_surface_speed, road_speeds)
 
+	# Clamp to current gear max speed so tank cannot exceed it.
+	if _hub.has_method("get_max_speed_limit"):
+		var limit: float = _hub.get_max_speed_limit()
+		if is_finite(limit) and limit >= 0.0:
+			consensus = clampf(consensus, -limit, limit)
+
+	# Publish current tread surface speed on the hub so other systems (engine, UI) can read it.
+	if _hub.has_method("set_track_speed"):
+		_hub.set_track_speed(consensus)
+
 	var current_spin: float = state.angular_velocity.dot(spin_axis)
 	var other_rot: Vector3 = state.angular_velocity - spin_axis * current_spin
 	var target_spin_drive: float = consensus / drive_radius

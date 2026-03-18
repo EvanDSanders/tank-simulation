@@ -22,10 +22,15 @@ script = ExtResource("1_5gegn")
 [node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="." unique_id=1193219206]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48518986, 0)
 node_b = NodePath("../Track Base")
+linear_limit_y/upper_distance = 0.1
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 800.0
+linear_spring_y/damping = 50.0
+linear_spring_y/equilibrium_point = -0.1
 angular_limit_x/upper_angle = 0.43633232
 angular_limit_x/lower_angle = -0.43633232
 angular_spring_x/enabled = true
-angular_spring_x/stiffness = 507.635
+angular_spring_x/stiffness = 400.0
 angular_spring_x/damping = 100.0
 
 [node name="Wheel" type="RigidBody3D" parent="." unique_id=2090089190]

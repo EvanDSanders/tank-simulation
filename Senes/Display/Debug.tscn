@@ -2,7 +2,9 @@
 
 [ext_resource type="Theme" uid="uid://c0wsmkaots3ab" path="res://Themes/Control3D.tres" id="1_wspiy"]
 [ext_resource type="Script" uid="uid://dagmons528vt7" path="res://Scripts/debug.gd" id="2_j7a1y"]
-[ext_resource type="FontFile" uid="uid://drafk2ct26w7t" path="res://FiraCodeNerdFontMono-Light.ttf" id="3_j7a1y"]
+[ext_resource type="LabelSettings" uid="uid://bdktjsoqypj2v" path="res://Themes/FiraCode.tres" id="3_j7a1y"]
+[ext_resource type="StyleBox" uid="uid://binenydmn7c5d" path="res://Themes/BoxHover.tres" id="3_kjl25"]
+[ext_resource type="FontFile" uid="uid://drafk2ct26w7t" path="res://FiraCodeNerdFontMono-Light.ttf" id="4_dd758"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j7a1y"]
 content_margin_left = 4.0
@@ -20,8 +22,8 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[sub_resource type="LabelSettings" id="LabelSettings_dd758"]
-font = ExtResource("3_j7a1y")
+[sub_resource type="LabelSettings" id="LabelSettings_kjl25"]
+font = ExtResource("4_dd758")
 
 [node name="Control" type="Control" unique_id=320973508]
 layout_mode = 3
@@ -77,8 +79,113 @@ offset_bottom = 18.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_j7a1y")
 
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=482015708]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Park" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1456921610]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+theme = ExtResource("1_wspiy")
+theme_override_styles/panel = ExtResource("3_kjl25")
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/Park" unique_id=950388049]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "P"
+label_settings = ExtResource("3_j7a1y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Reverse" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=297160074]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+theme = ExtResource("1_wspiy")
+theme_override_styles/panel = ExtResource("3_kjl25")
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/Reverse" unique_id=199869207]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "R"
+label_settings = ExtResource("3_j7a1y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Neutral" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=776752302]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+theme = ExtResource("1_wspiy")
+theme_override_styles/panel = ExtResource("3_kjl25")
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/Neutral" unique_id=548150045]
+layout_mode = 2
+text = "N"
+label_settings = ExtResource("3_j7a1y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Drive 1" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1624952180]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+theme = ExtResource("1_wspiy")
+theme_override_styles/panel = ExtResource("3_kjl25")
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/Drive 1" unique_id=857586613]
+layout_mode = 2
+text = "D1"
+label_settings = ExtResource("3_j7a1y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Drive 2" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=722451629]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+theme = ExtResource("1_wspiy")
+theme_override_styles/panel = ExtResource("3_kjl25")
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/Drive 2" unique_id=2059404958]
+layout_mode = 2
+text = "D2"
+label_settings = ExtResource("3_j7a1y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Drive 3" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1882824698]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+theme = ExtResource("1_wspiy")
+theme_override_styles/panel = ExtResource("3_kjl25")
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/Drive 3" unique_id=714126528]
+layout_mode = 2
+text = "D3"
+label_settings = ExtResource("3_j7a1y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Drive 4" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1739159917]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 2
+theme = ExtResource("1_wspiy")
+theme_override_styles/panel = ExtResource("3_kjl25")
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer/Drive 4" unique_id=644927705]
+layout_mode = 2
+text = "D4"
+label_settings = ExtResource("3_j7a1y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FPS" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=407909581]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "  00.0 FPS"
+label_settings = ExtResource("3_j7a1y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Input" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1410656066]
 layout_mode = 2
 text = " Hello Chat!"
-label_settings = SubResource("LabelSettings_dd758")
+label_settings = SubResource("LabelSettings_kjl25")
 horizontal_alignment = 1

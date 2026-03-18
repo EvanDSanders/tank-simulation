@@ -4,6 +4,17 @@ var can_write := false
  
 @onready var throttle_panel: Panel = $PanelContainer/VBoxContainer/ThrottleBox/Throttle
 @onready var steer_panel: Panel = $PanelContainer/VBoxContainer/SteerBox/Steer
+@onready var textBox: Label = $PanelContainer/VBoxContainer/Input
+
+@onready var gearBoxes: Array[Control] = [
+	$"PanelContainer/VBoxContainer/HBoxContainer/Park",
+	$"PanelContainer/VBoxContainer/HBoxContainer/Reverse",
+	$"PanelContainer/VBoxContainer/HBoxContainer/Neutral",
+	$"PanelContainer/VBoxContainer/HBoxContainer/Drive 1",
+	$"PanelContainer/VBoxContainer/HBoxContainer/Drive 2",
+	$"PanelContainer/VBoxContainer/HBoxContainer/Drive 3",
+	$"PanelContainer/VBoxContainer/HBoxContainer/Drive 4",
+]
 
 func T(number: float) -> String:
 	if number >= 0:
@@ -13,25 +24,32 @@ func T(number: float) -> String:
 
 func begin():
 	if not can_write: return;
-	$PanelContainer/VBoxContainer/Input.text = ""
+	textBox.text = ""
+
+func close() -> void:
+	if not can_write: return;
+	if textBox.text.length() > 0:
+		textBox.text = textBox.text.substr(0, textBox.text.length() - 1)
 	
 func write(_text:="", end:="\n") -> void:
 	if not can_write: return;
-	$PanelContainer/VBoxContainer/Input.text += "%s%s" % [_text, end]
+	textBox.text += "%s%s" % [_text, end]
 
 func writeStat(_name: String, _value: float, end:="\n") -> void:
 	if not can_write: return;
-	write("%s: %s" % [_name,   T(_value)], end) 
+	write("%s%s" % [_name,   T(_value)], end) 
 
 func writeInt(_name: String, _value: int, end:="\n") -> void:
 	if not can_write: return;
-	write("%s: %s" % [_name, str(_value)], end) 
+	write("%s%s" % [_name, str(_value)], end) 
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
+func shift(gear: Dictionary) -> void:
+	for each in gearBoxes:
+		if each.name == gear['name']:
+			each.modulate = gear['color']
+		else:
+			each.modulate = Color.DIM_GRAY
 
 func throttle(t: float) -> void:
 	var width = 492
@@ -61,6 +79,15 @@ func _physics_process(_delta: float) -> void:
 		can_write = false
 
 
+
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	shift({
+			"name": "Drive 1",
+			'color': Color.WHITE, 
+		})
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	pass
+	$PanelContainer/VBoxContainer/HBoxContainer/FPS.text = "  %s FPS" % [Engine.get_frames_per_second()]

@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://bdktjsoqypj2v"]
+
+[ext_resource type="FontFile" uid="uid://drafk2ct26w7t" path="res://FiraCodeNerdFontMono-Light.ttf" id="1_vxtrw"]
+
+[resource]
+font = ExtResource("1_vxtrw")
+font_size = 21

@@ -20,7 +20,7 @@ func _exportProvider(export: Dictionary):
 		self.rotate_y(facing[1])
 		self.rotate_z(facing[2])
 	
-	export[ "%s" % [t_name] ] = Globals.configure(self)
+	export['bones'][ "%s" % [t_name] ] = Globals.configure(self)
 	
 	
 	# export[ "%s" % [t_name] ] = Globals.configure(self.get_parent())

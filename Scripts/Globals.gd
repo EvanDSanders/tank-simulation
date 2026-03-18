@@ -70,7 +70,10 @@ func input(isRight: bool) -> float:
 
 
 func throttle() -> float:
-	return -Input.get_axis("Drive", "Reverse")
+	return Input.get_action_strength("Drive")
+
+func brake() -> float:
+	return Input.get_action_strength("Reverse")
 
 
 func steer(isRight: bool) -> float:

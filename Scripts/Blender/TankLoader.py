@@ -94,10 +94,12 @@ def importer(frame: int, externalLoader: bool = False):
 
     # On frame 0, create any bones that don't exist yet.
     if frame == 0:
-        ensure_bones_exist(tank[frame_str])
+        ensure_bones_exist(tank[frame_str]['bones'])
 
     # Use the same global-matrix technique for every frame (including 0).
-    set_bones_pose(tank[frame_str])
+    set_bones_pose(tank[frame_str]['bones'])
+
+    
 
 
 if not useLive:
