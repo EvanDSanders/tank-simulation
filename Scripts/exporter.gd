@@ -11,10 +11,10 @@ var frames: Dictionary[int, Dictionary]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	for each in self.find_children("*"):
-		if each.has_method("_exportProvider"):
-			parts.append(each)
-			print(each.t_name, ": ", self.get_path_to(each))
+	#for each in self.find_children("*"):
+		#if each.has_method("_exportProvider"):
+			#parts.append(each)
+			#print(each.t_name, ": ", self.get_path_to(each))
 
 	Globals.set_camera($"Camera Track2/Camera Track3/Camera3D")
 
@@ -31,7 +31,8 @@ func _physics_process(_delta: float) -> void:
 					'speed R': engine.right_track_hub.get_track_speed(),
 				}
 			}
-			for each in parts:
+			# for each in parts:
+			for each in Globals.exporters:
 				each._exportProvider(state)
 
 

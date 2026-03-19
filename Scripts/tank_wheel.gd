@@ -4,6 +4,7 @@ extends Node3D
 @onready var motor:  Generic6DOFJoint3D = $Axel
 @export var mount: RigidBody3D
 
+@onready var SPR:= $TrackingPoint
 
 var side: String
 var is_unlocked: bool = false
@@ -13,11 +14,14 @@ func _set_isRight(isRight: bool, ID: int) -> void:
 
 	$Wheel/TrackingPoint._setup("Wheel.%d.%s" % [ID, side], Vector3(0, 1.571 if isRight else -1.571, 0))
 	$"Wheel Base/TrackingPoint"._setup("Spring.%d.%s" % [ID, side])
+	SPR._setup("Mount.%d.%s" % [ID, side])
 
 func _ready() -> void:
 
 	if spring:
 		spring.node_a = spring.get_path_to(mount)
+		
+	SPR.reparent(mount, true)
 		
 	
 func _rigidBodyProvider():

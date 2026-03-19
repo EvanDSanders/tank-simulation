@@ -224,7 +224,8 @@ func _physics_process(_delta: float) -> void:
 		throttle = 0.0
 		brake = 1.0
 
-	D.throttle(abs(throttle) - brake)
+	D.throttle(throttle)
+	D.brake(brake)
 	D.steer(steer)
 
 

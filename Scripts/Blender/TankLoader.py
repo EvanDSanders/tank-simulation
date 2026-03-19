@@ -81,6 +81,54 @@ def set_bones_pose(frame_data):
         rig.pose.bones[key].matrix = arm_inv @ world_m
 
 
+def apply_pose_to_edit_bones():
+    """
+    Bake the current pose into the armature's rest/edit bones.
+
+    This fixes cases where the visual bone placement doesn't match in Edit Mode.
+    """
+    ctx = bpy.context
+
+    # Store current editor state (selection, active object, and mode).
+    prev_active_obj = ctx.view_layer.objects.active
+    prev_active_name = prev_active_obj.name if prev_active_obj else None
+    prev_mode = prev_active_obj.mode if prev_active_obj else None
+    prev_selected_names = [obj.name for obj in ctx.selected_objects]
+
+    try:
+        # Switch to the Tank Bones armature and enter Pose Mode.
+        bpy.ops.object.select_all(action='DESELECT')
+        rig.select_set(True)
+        ctx.view_layer.objects.active = rig
+        bpy.ops.object.mode_set(mode='POSE')
+
+        # Apply pose into the rest/edit bones.
+        bpy.ops.pose.armature_apply(selected=False)
+    finally:
+        # Restore selection.
+        bpy.ops.object.select_all(action='DESELECT')
+        for name in prev_selected_names:
+            obj = bpy.data.objects.get(name)
+            if obj:
+                obj.select_set(True)
+
+        # Restore active object and mode.
+        if prev_active_name:
+            restored = bpy.data.objects.get(prev_active_name)
+            if restored:
+                ctx.view_layer.objects.active = restored
+                if prev_mode:
+                    try:
+                        bpy.ops.object.mode_set(mode=prev_mode)
+                    except RuntimeError:
+                        bpy.ops.object.mode_set(mode='OBJECT')
+        else:
+            try:
+                bpy.ops.object.mode_set(mode='OBJECT')
+            except RuntimeError:
+                pass
+
+
 def importer(frame: int, externalLoader: bool = False):
     global tank
     if frame == 0 and not externalLoader:
@@ -99,14 +147,22 @@ def importer(frame: int, externalLoader: bool = False):
     # Use the same global-matrix technique for every frame (including 0).
     set_bones_pose(tank[frame_str]['bones'])
 
+    bpy.data.node_groups["TankAngleProvider"].nodes["Switch.004"].inputs[1].default_value = tank[frame_str]['stats']['angle L']
+    bpy.data.node_groups["TankAngleProvider"].nodes["Switch.004"].inputs[2].default_value = tank[frame_str]['stats']['angle R']
+
+    # Frame 0: bake pose into edit bones so placement matches in Edit Mode.
+    if frame == 0:
+        apply_pose_to_edit_bones()
+
     
 
 
 if not useLive:
     load()
-
+import time
 
 def on_frame_change(scene):
+    start_time = time.time()
     global tank
     if useLive:
         if os.path.isfile(SHARED_STATE_PATH):
@@ -118,6 +174,22 @@ def on_frame_change(scene):
                 pass
     else:
         importer(scene.frame_current)
+        
+    end_time = time.time()
+    print(f"Frame change took {end_time - start_time} seconds")
 
+# Register the frame-change handler without accumulating duplicates on reload.
+_handlers = bpy.app.handlers.frame_change_post
+_this_module = __name__
+for _h in list(_handlers):
+    if getattr(_h, "__name__", None) == "on_frame_change" and getattr(_h, "__module__", None) == _this_module:
+        try:
+            _handlers.remove(_h)
+        except ValueError:
+            pass
 
-bpy.app.handlers.frame_change_post.append(on_frame_change)
+if not any(
+    getattr(_h, "__name__", None) == "on_frame_change" and getattr(_h, "__module__", None) == _this_module
+    for _h in _handlers
+):
+    _handlers.append(on_frame_change)

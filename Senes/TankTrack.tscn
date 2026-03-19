@@ -20,21 +20,21 @@ size = Vector3(0.07, 0.1, 1.6)
 script = ExtResource("1_5gegn")
 
 [node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="." unique_id=1193219206]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48518986, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48832944, 0)
 node_b = NodePath("../Track Base")
 linear_limit_y/upper_distance = 0.1
 linear_spring_y/enabled = true
 linear_spring_y/stiffness = 800.0
 linear_spring_y/damping = 50.0
-linear_spring_y/equilibrium_point = -0.1
-angular_limit_x/upper_angle = 0.43633232
-angular_limit_x/lower_angle = -0.43633232
+linear_spring_y/equilibrium_point = -0.085
+angular_limit_x/upper_angle = 0.2617994
+angular_limit_x/lower_angle = -0.2617994
 angular_spring_x/enabled = true
 angular_spring_x/stiffness = 400.0
 angular_spring_x/damping = 100.0
 
 [node name="Wheel" type="RigidBody3D" parent="." unique_id=2090089190]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -1.4000001)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -1.4000001)
 collision_layer = 9
 collision_mask = 2
 mass = 2.0
@@ -52,7 +52,7 @@ t_name = "Drive Wheel"
 facing = Vector3(0, 1.571, 0)
 
 [node name="Drive Axel" type="Generic6DOFJoint3D" parent="." unique_id=1424282199]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -1.4000001)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -1.4000001)
 node_a = NodePath("../Track Base")
 node_b = NodePath("../Wheel")
 angular_limit_x/enabled = false
@@ -83,7 +83,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 1)
 mount = NodePath("../Track Base")
 
 [node name="TankWheelF" parent="." unique_id=16140904 node_paths=PackedStringArray("mount") instance=ExtResource("1_16qp6")]
-transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 0.5, 1.4000001)
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 0.4, 1.4000001)
 mount = NodePath("../Track Base")
 
 [node name="Track Base" type="RigidBody3D" parent="." unique_id=916730528]

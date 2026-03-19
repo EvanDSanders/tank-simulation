@@ -3,6 +3,10 @@ extends Node
 var camera: Camera3D
 signal camera_changed(camera: Camera3D)
 
+var exporters: Array[Node3D] = []
+
+
+
 func set_camera(camera: Camera3D) -> void:
 	self.camera = camera
 	camera_changed.emit(camera)
@@ -82,6 +86,9 @@ func steer(isRight: bool) -> float:
 	return Input.get_axis("Turn " + sideL, "Turn " + sideR)
 	
 	
+
+
+
 func configure(object: Node3D):
 	return [
 		[

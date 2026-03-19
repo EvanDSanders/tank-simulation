@@ -10,10 +10,14 @@
 [node name="TankWheel" type="Node3D" unique_id=1115414723]
 script = ExtResource("1_dpi24")
 
+[node name="TrackingPoint" parent="." unique_id=156021648 instance=ExtResource("4_msu3h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46136203, 0)
+facing = Vector3(1.571, 0, 0)
+
 [node name="Wheel" parent="." unique_id=2090089190 instance=ExtResource("1_pbo2i")]
 physics_material_override = SubResource("PhysicsMaterial_msu3h")
 
-[node name="TrackingPoint" parent="Wheel" unique_id=156021648 instance=ExtResource("4_msu3h")]
+[node name="TrackingPoint" parent="Wheel" unique_id=2089023908 instance=ExtResource("4_msu3h")]
 facing = Vector3(0, 1.571, 0)
 
 [node name="Spring" type="Generic6DOFJoint3D" parent="." unique_id=1108390385]

@@ -9,9 +9,12 @@ func _setup(_name: String, _facing = null):
 	self.t_name = _name
 	if _facing: 
 		self.facing = _facing
+		
+	print("%s: Hello" % [_name])
 
 
-#func _ready() -> void:
+func _ready() -> void:
+	Globals.exporters.append(self)
 
 func _exportProvider(export: Dictionary):
 	if not didRotate:
