@@ -148,5 +148,6 @@ jolt_physics_3d/simulation/position_steps=20
 jolt_physics_3d/simulation/penetration_slop=0.0
 jolt_physics_3d/simulation/allow_sleep=false
 jolt_physics_3d/limits/max_angular_velocity=1000.0000084983168
+3d/default_angular_damp=0.25
 3d/solver/solver_iterations=64
 jolt_physics_3d/run_on_separate_thread=true

@@ -11,7 +11,7 @@
 script = ExtResource("1_dpi24")
 
 [node name="TrackingPoint" parent="." unique_id=156021648 instance=ExtResource("4_msu3h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46136203, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.922, 0)
 facing = Vector3(1.571, 0, 0)
 
 [node name="Wheel" parent="." unique_id=2090089190 instance=ExtResource("1_pbo2i")]
@@ -21,14 +21,14 @@ physics_material_override = SubResource("PhysicsMaterial_msu3h")
 facing = Vector3(0, 1.571, 0)
 
 [node name="Spring" type="Generic6DOFJoint3D" parent="." unique_id=1108390385]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26974523, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.54, 0)
 node_b = NodePath("../Wheel Base")
-linear_limit_y/upper_distance = 0.1
-linear_limit_y/lower_distance = -0.1
+linear_limit_y/upper_distance = 0.2
+linear_limit_y/lower_distance = -0.2
 linear_spring_y/enabled = true
-linear_spring_y/stiffness = 700.0
+linear_spring_y/stiffness = 500.0
 linear_spring_y/damping = 50.0
-linear_spring_y/equilibrium_point = -0.025
+linear_spring_y/equilibrium_point = -0.055
 angular_spring_x/stiffness = 55.685
 angular_spring_x/damping = 23.04
 angular_spring_y/stiffness = 51.125
@@ -37,7 +37,7 @@ angular_spring_z/stiffness = 57.645
 angular_spring_z/damping = 1.84
 
 [node name="Wheel Base" parent="." unique_id=2108097296 instance=ExtResource("2_dpi24")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36136204, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.722, 0)
 
 [node name="TrackingPoint" parent="Wheel Base" unique_id=1241406018 instance=ExtResource("4_msu3h")]
 facing = Vector3(1.571, 0, 0)

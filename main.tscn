@@ -12,7 +12,10 @@
 [ext_resource type="PackedScene" uid="uid://2h4lqlei2xso" path="res://Senes/Display/Debug.tscn" id="7_272bh"]
 [ext_resource type="Script" uid="uid://2qtcgar5d57u" path="res://Scripts/engine.gd" id="7_efxa6"]
 [ext_resource type="Script" uid="uid://buk0sjennpxkw" path="res://Scripts/controller.gd" id="8_dg77c"]
+[ext_resource type="Shader" uid="uid://b1d2nsoeeojth" path="res://Shaders/Grass.gdshader" id="13_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://hhfl2q4tmc5x" path="res://Objects/Logs.glb" id="13_ycdy4"]
+[ext_resource type="PackedScene" uid="uid://cnk0d1v7qsefu" path="res://Objects/Flap2.glb" id="14_w48qg"]
+[ext_resource type="Script" uid="uid://0b51e62j8hxy" path="res://Scripts/flap_connect.gd" id="15_vivmo"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_w48qg"]
 _surfaces = [{
@@ -162,10 +165,10 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
-size = Vector3(1.1347656, 0.49316406, 2.2)
+size = Vector3(2.27, 0.986, 4.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
-size = Vector3(1.135, 0.489, 2.194)
+size = Vector3(2.27, 0.978, 4.388)
 
 [sub_resource type="GDScript" id="GDScript_7mycd"]
 script/source = "extends MeshInstance3D
@@ -197,10 +200,29 @@ func _process(delta: float) -> void:
 "
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5vw27"]
-size = Vector3(336.8, 0.9870081, 472.487)
+size = Vector3(2000, 1, 2000)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yaehf"]
+render_priority = 0
+shader = ExtResource("13_2cqfq")
+shader_parameter/grass_dark = Color(0.12, 0.32, 0.1, 1)
+shader_parameter/grass_mid = Color(0.22, 0.48, 0.16, 1)
+shader_parameter/grass_light = Color(0.2787383, 0.58507204, 0.35859048, 1)
+shader_parameter/grass_tip = Color(0.36795387, 0.6445495, 0.40152502, 1)
+shader_parameter/patch_dry = Color(0.28, 0.24, 0.14, 1)
+shader_parameter/patch_scale = 0.01999999955297
+shader_parameter/detail_scale = 0.20000000298023
+shader_parameter/dry_amount = 0.12
+shader_parameter/roughness_base = 0.57999998703584
+shader_parameter/roughness_var = 0.22999999485904
+shader_parameter/wind_strength = 0.0
+shader_parameter/wind_speed = 0.0
+shader_parameter/rim_power = 0.5
+shader_parameter/rim_strength = 0.11999999731776
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_5vw27"]
-size = Vector2(336.445, 500)
+material = SubResource("ShaderMaterial_yaehf")
+size = Vector2(2000, 2000)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kek77"]
 size = Vector3(79.224, 2, 34.324)
@@ -240,7 +262,7 @@ script = ExtResource("8_dg77c")
 metadata/_custom_type_script = "uid://buk0sjennpxkw"
 
 [node name="Frame" type="RigidBody3D" parent="." unique_id=648524429]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.61281765, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.226, 0)
 collision_layer = 0
 collision_mask = 2
 mass = 20.0
@@ -260,16 +282,16 @@ t_name = "Hull"
 facing = Vector3(3.145, 0, 0)
 
 [node name="Tank Track L" parent="." unique_id=2033837891 node_paths=PackedStringArray("mount") instance=ExtResource("1_ig7tw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 0)
 mount = NodePath("../Frame")
 
 [node name="Tank Track R" parent="." unique_id=366810390 node_paths=PackedStringArray("mount") instance=ExtResource("1_ig7tw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0, 0)
 mount = NodePath("../Frame")
 isRight = true
 
 [node name="Camera Track2" parent="." unique_id=895943255 instance=ExtResource("1_1bvp3")]
-transform = Transform3D(0.44967765, 0.8931909, -3.9042614e-08, 0, -4.371139e-08, -1, -0.8931909, 0.44967765, -1.9656035e-08, 0, 1.538044, 0)
+transform = Transform3D(0.44967765, 0.8931909, -3.9042614e-08, 0, -4.371139e-08, -1, -0.8931909, 0.44967765, -1.9656035e-08, 0, 3.076, 0)
 skeleton = NodePath("../Frame")
 surface_material_override/0 = null
 script = ExtResource("2_0xm2m")
@@ -281,7 +303,7 @@ surface_material_override/0 = null
 script = SubResource("GDScript_7mycd")
 
 [node name="Camera3D" type="Camera3D" parent="Camera Track2/Camera Track3" unique_id=1643063543]
-transform = Transform3D(-1, 8.742278e-08, -3.821371e-15, 0, -4.371139e-08, -1, -8.742278e-08, -1, 4.371139e-08, -1.3369388e-15, -2.973982, 1.5292798e-08)
+transform = Transform3D(-1, 8.742278e-08, -3.821371e-15, 0, -4.371139e-08, -1, -8.742278e-08, -1, 4.371139e-08, 0, -5.948, 0)
 
 [node name="TrackingPoint" parent="Camera Track2/Camera Track3/Camera3D" unique_id=1741484053 instance=ExtResource("3_7mycd")]
 t_name = "Camera"
@@ -293,7 +315,7 @@ surface_material_override/0 = null
 script = SubResource("GDScript_272bh")
 
 [node name="RigidBody3D" type="StaticBody3D" parent="." unique_id=1410484668]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.497396, -107.36046)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8247738, -850.9467)
 collision_layer = 15
 collision_mask = 15
 
@@ -302,7 +324,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.504652, -235.74326)
 shape = SubResource("BoxShape3D_5vw27")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/CollisionShape3D" unique_id=1049222352]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5061082, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("PlaneMesh_5vw27")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=621573110]
@@ -320,4 +342,46 @@ shape = SubResource("BoxShape3D_kek77")
 
 [node name="Logs" parent="." unique_id=917738207 instance=ExtResource("13_ycdy4")]
 
+[node name="Flap2" parent="." unique_id=1894498389 instance=ExtResource("14_w48qg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2767746, -3.3663893)
+
+[node name="Track Plate_002" parent="Flap2" index="0" unique_id=1925773788]
+mass = 0.05
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, -0.45, 0.02)
+
+[node name="TrackingPoint" parent="Flap2/Track Plate_002" index="2" unique_id=1126810861 instance=ExtResource("3_7mycd")]
+t_name = "Flap R"
+
+[node name="Flap3" parent="." unique_id=152838666 instance=ExtResource("14_w48qg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.277, -3.366)
+
+[node name="Track Plate_002" parent="Flap3" index="0" unique_id=1925773788]
+mass = 0.5
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, -0.45, 0.02)
+
+[node name="TrackingPoint" parent="Flap3/Track Plate_002" index="2" unique_id=1327006298 instance=ExtResource("3_7mycd")]
+t_name = "Flap L"
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="." unique_id=668648618 node_paths=PackedStringArray("mount")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.277, -3.366)
+node_b = NodePath("../Flap3/Track Plate_002")
+angular_limit_x/enabled = false
+angular_limit_x/upper_angle = 1.7453293
+angular_limit_x/lower_angle = -1.7453293
+script = ExtResource("15_vivmo")
+mount = NodePath("../Tank Track L")
+
+[node name="Generic6DOFJoint3D2" type="Generic6DOFJoint3D" parent="." unique_id=1558709274 node_paths=PackedStringArray("mount")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2767746, -3.3663893)
+node_b = NodePath("../Flap2/Track Plate_002")
+angular_limit_x/enabled = false
+angular_limit_x/upper_angle = 1.7453293
+angular_limit_x/lower_angle = -1.7453293
+script = ExtResource("15_vivmo")
+mount = NodePath("../Tank Track R")
+
 [editable path="Ground2"]
+[editable path="Flap2"]
+[editable path="Flap3"]

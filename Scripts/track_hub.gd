@@ -1,13 +1,14 @@
 extends Node3D
 
 @export var mount: RigidBody3D
-@onready var pivot: Generic6DOFJoint3D = $Generic6DOFJoint3D
+@onready var pivot: Generic6DOFJoint3D = $"Slider DoF"
+@onready var trackBody: RigidBody3D = $"Track Base"
 
 @export var isRight: bool = false
 
 @export var max_speed: float = 30.0
-@export var track_radius_drive: float = 0.25
-const ROAD_WHEEL_RADIUS: float = 0.2
+@export var track_radius_drive: float = 0.5
+const ROAD_WHEEL_RADIUS: float = 0.4
 @export var drive_inertia: float = 50.0
 @export var drive_damping: float = 5.0
 

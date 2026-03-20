@@ -3,14 +3,15 @@
 [ext_resource type="PackedScene" uid="uid://3yx62q146n5b" path="res://Objects/Wheel.glb" id="1_eyshg"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_7dm0k"]
-height = 0.2
-radius = 0.2
+height = 0.4
+radius = 0.4
 
 [node name="Wheel" type="RigidBody3D" unique_id=2090089190]
 collision_layer = 9
 collision_mask = 2
 
 [node name="Wheel" parent="." unique_id=236391851 instance=ExtResource("1_eyshg")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1702178761]
 transform = Transform3D(-4.371139e-08, -1, 4.371139e-08, 0, -4.371139e-08, -1, 1, -4.371139e-08, 1.9106855e-15, 0, 0, 0)

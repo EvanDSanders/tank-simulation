@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-const ROAD_WHEEL_RADIUS: float = 0.2
+const ROAD_WHEEL_RADIUS: float = 0.4
 
 ## How much tread speed comes from road wheels (0 = drive only, 1 = road wheels only). Higher = forces on road wheels (hill, mud) push back on drive.
 @export_range(0.0, 1.0) var road_wheel_influence: float = 0.7
@@ -70,7 +70,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		return
 
 	var road_wheels: Array = _hub.get_road_wheels()
-	var drive_radius: float = _hub.track_radius_drive if _hub.get("track_radius_drive") != null else 0.25
+	var drive_radius: float = _hub.track_radius_drive if _hub.get("track_radius_drive") != null else 0.5
 
 	var spin_axis := _get_spin_axis(self)
 	var drive_surface_speed := _get_surface_speed(self, drive_radius)

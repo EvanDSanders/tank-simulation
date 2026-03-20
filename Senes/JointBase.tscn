@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cmgo0h2c8vxnm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gmu84"]
-size = Vector3(0.2, 0.2, 0.2)
+size = Vector3(0.4, 0.4, 0.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_c2iqq"]
 size = Vector3(0.1, 0.1, 0.1)
@@ -15,4 +15,5 @@ mass = 0.5
 shape = SubResource("BoxShape3D_gmu84")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1173623824]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 mesh = SubResource("BoxMesh_c2iqq")

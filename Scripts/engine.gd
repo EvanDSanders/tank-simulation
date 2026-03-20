@@ -3,6 +3,7 @@ extends Node
 
 @export var diagnostics: Control
 @onready var D := diagnostics
+@onready var tankFrame: RigidBody3D = $"../Frame"
 
 @export var left_track_hub: Node
 @export var right_track_hub: Node
@@ -18,7 +19,7 @@ extends Node
 var torque: float = 0
 
 ## Brake torque in N·m when brake = 1.0. Not scaled by gear.
-@export var brake_scale: float = 75.0
+@export var brake_scale: float = 250
 
 var gear := 1
 
@@ -33,16 +34,16 @@ var Gears := {
 			'torque_high': 0,
 			'torque_low': 0,
 			'low_speed': 0,
-			'max_speed': 10 
+			'max_speed': 20 
 		},
 	-1: 
 		{
 			"name": "Reverse",
 			'color': Color.RED, 
-			'torque_high': 100,
-			'torque_low': 100,
+			'torque_high': 200,
+			'torque_low': 150,
 			'low_speed': 0,
-			'max_speed': 10 
+			'max_speed': 20 
 		},
 	 0: 
 		{
@@ -51,41 +52,41 @@ var Gears := {
 			'torque_high': 0,
 			'torque_low': 0,
 			'low_speed': 0,
-			'max_speed': 10 
+			'max_speed': 20 
 		},
 	 1: 
 		{
 			"name": "Drive 1",
 			'color': Color.WHITE, 
-			'torque_high': 100,
-			'torque_low': 100,
+			'torque_high': 200,
+			'torque_low': 150,
 			'low_speed': 0,
-			'max_speed': 10 
+			'max_speed': 20 
 		},
 	 2: 
 		{
 			"name": "Drive 2",
 			'color': Color.WHITE, 
-			'torque_high': 100,
-			'torque_low': 75,
-			'low_speed': 10,
-			'max_speed': 40 
+			'torque_high': 150,
+			'torque_low': 90,
+			'low_speed': 20,
+			'max_speed': 45 
 		},
 	 3: 
 		{
 			"name": "Drive 3",
 			'color': Color.WHITE, 
-			'torque_high': 75,
-			'torque_low': 30,
-			'low_speed': 40,
+			'torque_high': 90,
+			'torque_low': 40,
+			'low_speed': 45,
 			'max_speed': 90 
 		},
 	 4: 
 		{
 			"name": "Drive 4",
 			'color': Color.YELLOW, 
-			'torque_high': 35,
-			'torque_low': 10,
+			'torque_high': 40,
+			'torque_low': 15,
 			'low_speed': 90,
 			'max_speed': 150 
 		},
@@ -130,12 +131,11 @@ func get_track_speed() -> Vector2:
 	return Vector2(left, right)
 
 
-## Apply braking torque like car brakes.
-## `brake` should be 0.0 (no brake) to 1.0 (full brake).
-## Braking torque always opposes current track motion.
-func apply_brake(brake: float) -> void:
-	var b := clampf(brake, 0.0, 1.0)
-	if b <= 0.0:
+## Apply braking torque per track (0–1 each). Opposes that side's current motion; raw N·m, not gear-scaled.
+func apply_brake(left_brake: float, right_brake: float) -> void:
+	var bl := clampf(left_brake, 0.0, 1.0)
+	var br := clampf(right_brake, 0.0, 1.0)
+	if bl <= 0.0 and br <= 0.0:
 		return
 
 	var speeds := get_track_speed()
@@ -147,15 +147,25 @@ func apply_brake(brake: float) -> void:
 	if absf(speeds.y) > 0.001:
 		right_sign = signf(speeds.y)
 
-	if left_sign == 0.0 and right_sign == 0.0:
+	var left_Nm := 0.0
+	var right_Nm := 0.0
+	if bl > 0.0 and left_sign != 0.0:
+		left_Nm = -left_sign * bl * brake_scale
+	if br > 0.0 and right_sign != 0.0:
+		right_Nm = -right_sign * br * brake_scale
+
+	if left_Nm == 0.0 and right_Nm == 0.0:
 		return
 
-	var brake_torque_Nm: float = b * brake_scale
+	_apply_track_torque_raw(left_Nm, right_Nm)
 
-	# Oppose current motion: apply raw N·m so braking is not scaled by gear torque.
-	var left_brake := -left_sign * brake_torque_Nm
-	var right_brake := -right_sign * brake_torque_Nm
-	_apply_track_torque_raw(left_brake, right_brake)
+
+func apply_brake_left(brake: float) -> void:
+	apply_brake(brake, 0.0)
+
+
+func apply_brake_right(brake: float) -> void:
+	apply_brake(0.0, brake)
 
 
 func _apply_current_gear() -> void:
@@ -195,6 +205,9 @@ func shiftDown() -> void:
 func _physics_process(_delta: float) -> void:
 	D.begin()
 
+	var track_speed := get_track_speed()
+	var avg_speed : float = (abs(track_speed.x) + abs(track_speed.y)) / 2.0
+
 	# Update torque from current speed every frame so the gear torque curve applies (e.g. gear 2+ can pull past 10 m/s).
 	# _apply_current_gear()
 
@@ -228,24 +241,32 @@ func _physics_process(_delta: float) -> void:
 	D.brake(brake)
 	D.steer(steer)
 
+	var steer_fac       := clampf( Globals.remap(5, 10, 1, 0, avg_speed), 0, 1 )
+	var steer_fac_brake := clampf( Globals.remap(5, 10, 0, 1, avg_speed), 0, 1 )
 
-	var left_torque := throttle + steer
-	var right_torque := throttle - steer
-
-
+	
+	
+	
+	
+	var left_torque  := throttle + steer * 0.75 * steer_fac
+	var right_torque := throttle - steer * 0.75 * steer_fac
+	
 	set_track_torque(left_torque, right_torque)
+
+	apply_brake_left	( -steer * steer_fac_brake * .99 )
+	apply_brake_right	( +steer * steer_fac_brake * .99 )
+
+
 	D.writeStat("Torque: ", left_torque, ", ")
 	D.writeStat("", right_torque)
 
-	var track_speed := get_track_speed()
 	D.writeStat("Track Speed: ", track_speed.x, " m/s, ")
 	D.writeStat("", track_speed.y, " m/s\n")
 
-	var avg_speed_ms := (track_speed.x + track_speed.y) / 2.0
-	var avg_speed_kmh := avg_speed_ms * 3.6
-	var avg_speed_mph := avg_speed_ms * 2.23694
+	var avg_speed_kmh := avg_speed * 3.6
+	var avg_speed_mph := avg_speed * 2.23694
 	
-	D.writeStat("Speed: ", avg_speed_ms, " m/s, ")
+	D.writeStat("Speed: ", avg_speed, " m/s, ")
 	D.writeStat("", avg_speed_kmh, " KPH, ")
 	D.writeStat("", avg_speed_mph, " MPH\n")
 
@@ -257,7 +278,7 @@ func _physics_process(_delta: float) -> void:
 
 
 	if brake > 0.0:
-		apply_brake(brake)
+		apply_brake(brake, brake)
 
 
 	if Input.is_action_just_pressed("Gear Up"):

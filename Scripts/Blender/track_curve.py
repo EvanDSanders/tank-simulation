@@ -15,20 +15,20 @@ import mathutils
 # Radii = track contact radius. With USE_EXPLICIT_ORDER, list order = path order (order the track physically runs).
 # Typical order: drive -> top run (tension/idler) -> front -> bottom run (road wheels) -> back to drive.
 WHEELS = [
-    ("Drive Wheel.R", 50 / 200),
+    ("Drive Wheel.R", 50 / 100),
     
-    ("Wheel.0.R", 40 / 200),
-    ("Wheel.1.R", 40 / 200),  # add your wheel bone names and radii
-    ("Wheel.2.R", 40 / 200),
-    ("Wheel.3.R", 40 / 200),
-    ("Wheel.4.R", 40 / 200),
-    ("Wheel.5.R", 40 / 200),
-    ("Wheel.6.R", 40 / 200),
+    ("Wheel.0.R", 40 / 100),
+    ("Wheel.1.R", 40 / 100),  # add your wheel bone names and radii
+    ("Wheel.2.R", 40 / 100),
+    ("Wheel.3.R", 40 / 100),
+    ("Wheel.4.R", 40 / 100),
+    ("Wheel.5.R", 40 / 100),
+    ("Wheel.6.R", 40 / 100),
 
-    ("Tension Wheel.3.R", 30 / 200, "inner"),
-    ("Tension Wheel.2.R", 30 / 200, "inner"),
-    ("Tension Wheel.1.R", 30 / 200, "inner"),
-    ("Tension Wheel.0.R", 30 / 200, "inner"),
+    ("Tension Wheel.3.R", 30 / 100, "inner"),
+    ("Tension Wheel.2.R", 30 / 100, "inner"),
+    ("Tension Wheel.1.R", 30 / 100, "inner"),
+    ("Tension Wheel.0.R", 30 / 100, "inner"),
     # ("Idler.L", 0.12),
 ]
 # Use inner tangents and inner arcs (curve runs inside the wheel loop).
