@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://2h4lqlei2xso" path="res://Senes/Display/Debug.tscn" id="7_272bh"]
 [ext_resource type="Script" uid="uid://2qtcgar5d57u" path="res://Scripts/engine.gd" id="7_efxa6"]
 [ext_resource type="Script" uid="uid://buk0sjennpxkw" path="res://Scripts/controller.gd" id="8_dg77c"]
+[ext_resource type="PackedScene" uid="uid://b3xocnbhycxo6" path="res://Senes/EngineSound.tscn" id="11_yaehf"]
 [ext_resource type="Shader" uid="uid://b1d2nsoeeojth" path="res://Shaders/Grass.gdshader" id="13_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://hhfl2q4tmc5x" path="res://Objects/Logs.glb" id="13_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://cnk0d1v7qsefu" path="res://Objects/Flap2.glb" id="14_w48qg"]
@@ -261,6 +262,10 @@ metadata/_custom_type_script = "uid://2qtcgar5d57u"
 script = ExtResource("8_dg77c")
 metadata/_custom_type_script = "uid://buk0sjennpxkw"
 
+[node name="Timer" type="Timer" parent="TankEngine" unique_id=60002255]
+wait_time = 0.6
+one_shot = true
+
 [node name="Frame" type="RigidBody3D" parent="." unique_id=648524429]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.226, 0)
 collision_layer = 0
@@ -280,6 +285,9 @@ surface_material_override/0 = null
 [node name="TrackingPoint" parent="Frame" unique_id=156021648 instance=ExtResource("3_7mycd")]
 t_name = "Hull"
 facing = Vector3(3.145, 0, 0)
+
+[node name="AudioStreamPlayer3D" parent="Frame" unique_id=2041921024 instance=ExtResource("11_yaehf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3116958, -2.5244875)
 
 [node name="Tank Track L" parent="." unique_id=2033837891 node_paths=PackedStringArray("mount") instance=ExtResource("1_ig7tw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 0)
@@ -345,7 +353,7 @@ shape = SubResource("BoxShape3D_kek77")
 [node name="Flap2" parent="." unique_id=1894498389 instance=ExtResource("14_w48qg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.2767746, -3.3663893)
 
-[node name="Track Plate_002" parent="Flap2" index="0" unique_id=1925773788]
+[node name="Track Plate_002" parent="Flap2" index="0" unique_id=1837411185]
 mass = 0.05
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.45, 0.02)
@@ -356,7 +364,7 @@ t_name = "Flap R"
 [node name="Flap3" parent="." unique_id=152838666 instance=ExtResource("14_w48qg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.277, -3.366)
 
-[node name="Track Plate_002" parent="Flap3" index="0" unique_id=1925773788]
+[node name="Track Plate_002" parent="Flap3" index="0" unique_id=1837411185]
 mass = 0.5
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.45, 0.02)
@@ -381,6 +389,8 @@ angular_limit_x/upper_angle = 1.7453293
 angular_limit_x/lower_angle = -1.7453293
 script = ExtResource("15_vivmo")
 mount = NodePath("../Tank Track R")
+
+[connection signal="timeout" from="TankEngine/Timer" to="TankEngine" method="shiftTimout"]
 
 [editable path="Ground2"]
 [editable path="Flap2"]

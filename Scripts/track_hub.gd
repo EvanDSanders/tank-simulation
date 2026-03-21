@@ -13,6 +13,7 @@ const ROAD_WHEEL_RADIUS: float = 0.4
 @export var drive_damping: float = 5.0
 
 var _engine_torque: float = 0.0
+var _engine_accel: float = 0.0
 var _reaction_torque: float = 0.0
 var _track_speed: float = 0.0
 
@@ -67,6 +68,14 @@ func take_engine_torque() -> float:
 	var t = _engine_torque
 	_engine_torque = 0.0
 	return t
+
+func apply_engine_accel(accel: float) -> void:
+	_engine_accel += accel
+
+func take_engine_accel() -> float:
+	var a = _engine_accel
+	_engine_accel = 0.0
+	return a
 
 
 func set_reaction_torque(torque: float) -> void:

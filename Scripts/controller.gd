@@ -30,16 +30,22 @@ var Gears := {
         [
             'player-leds 2',
             'lightbar 200 255 255',
+            'trigger right feedback-raw 3 4 4 5 5 6 6 7 7 8'
+
         ],
 	"Drive 3": 
         [
             'player-leds 3',
             'lightbar 200 255 255',
+            'trigger right feedback-raw 4 4 5 5 6 6 7 7 8 8'
+
         ],
 	"Drive 4": 
         [
             'player-leds 4',
             'lightbar 250 255 10',
+            'trigger right feedback-raw 6 6 7 7 7 7 8 8 8 8'
+
         ],
 }
 

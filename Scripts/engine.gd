@@ -8,97 +8,108 @@ extends Node
 @export var left_track_hub: Node
 @export var right_track_hub: Node
 
-## Scale input (-1..1) to drive torque in N·m. Increase if the tank doesn't move.
-@export var torque_low: float = 0
-@export var torque_high: float = 50
+## Scale input (-1..1) to drive acceleration at the tread (tuned for feel).
+@export var accel_low: float = 0
+@export var accel_high: float = 50
 @export var max_speed: float = 10
 @export var low_speed: float = 0
 
 @onready var controller: DualSenseCtl = $DualSenseCtl
+@onready var soundEmitter := $"../Frame/AudioStreamPlayer3D"
 
-var torque: float = 0
+var accel: float = 0
 
 ## Brake torque in N·m when brake = 1.0. Not scaled by gear.
 @export var brake_scale: float = 250
+
+var isShifting := false
 
 var gear := 1
 
 func _ready() -> void:
 	_apply_current_gear()
 
+const GearsBox = {   #  -2   -1     0    1       2       3       4
+	  'accel_high':  [	0,	400,	0,	400,	250, 	250,	200	]
+	, 'accel_low' :  [	0,	200,	0,	200,	300, 	150,	100	]
+	, 'low_speed' :  [	0,	0,		0,	0,		15, 	40,		90	]
+	, 'max_speed' :  [	0,	15,		0,	15,		40, 	90,		150	]
+}				     #  0   1       2    3       4       5       6
+
+
 var Gears := {
 	-2: 
 		{
 			"name": "Park",
 			'color': Color.RED, 
-			'torque_high': 0,
-			'torque_low': 0,
-			'low_speed': 0,
-			'max_speed': 20 
+			'accel_high': GearsBox['accel_high'][0],
+			'accel_low':  GearsBox['accel_low' ][0],
+			'low_speed':  GearsBox['low_speed' ][0],
+			'max_speed':  GearsBox['max_speed' ][0] 
 		},
 	-1: 
 		{
 			"name": "Reverse",
 			'color': Color.RED, 
-			'torque_high': 200,
-			'torque_low': 150,
-			'low_speed': 0,
-			'max_speed': 20 
+			'accel_high': GearsBox['accel_high'][1],
+			'accel_low':  GearsBox['accel_low' ][1],
+			'low_speed':  GearsBox['low_speed' ][1],
+			'max_speed':  GearsBox['max_speed' ][1] 
 		},
 	 0: 
 		{
 			"name": "Neutral",
 			'color': Color(.2, .7, 1), 
-			'torque_high': 0,
-			'torque_low': 0,
-			'low_speed': 0,
-			'max_speed': 20 
+			'accel_high': GearsBox['accel_high'][2],
+			'accel_low':  GearsBox['accel_low' ][2],
+			'low_speed':  GearsBox['low_speed' ][2],
+			'max_speed':  GearsBox['max_speed' ][2] 
 		},
 	 1: 
 		{
 			"name": "Drive 1",
 			'color': Color.WHITE, 
-			'torque_high': 200,
-			'torque_low': 150,
-			'low_speed': 0,
-			'max_speed': 20 
+			'accel_high': GearsBox['accel_high'][3],
+			'accel_low':  GearsBox['accel_low' ][3],
+			'low_speed':  GearsBox['low_speed' ][3],
+			'max_speed':  GearsBox['max_speed' ][3] 
 		},
 	 2: 
 		{
 			"name": "Drive 2",
 			'color': Color.WHITE, 
-			'torque_high': 150,
-			'torque_low': 90,
-			'low_speed': 20,
-			'max_speed': 45 
+			'accel_high': GearsBox['accel_high'][4],
+			'accel_low':  GearsBox['accel_low' ][4],
+			'low_speed':  GearsBox['low_speed' ][4],
+			'max_speed':  GearsBox['max_speed' ][4] 
 		},
 	 3: 
 		{
 			"name": "Drive 3",
 			'color': Color.WHITE, 
-			'torque_high': 90,
-			'torque_low': 40,
-			'low_speed': 45,
-			'max_speed': 90 
+			'accel_high': GearsBox['accel_high'][5],
+			'accel_low':  GearsBox['accel_low' ][5],
+			'low_speed':  GearsBox['low_speed' ][5],
+			'max_speed':  GearsBox['max_speed' ][5] 
 		},
 	 4: 
 		{
 			"name": "Drive 4",
 			'color': Color.YELLOW, 
-			'torque_high': 40,
-			'torque_low': 15,
-			'low_speed': 90,
-			'max_speed': 150 
+			'accel_high': GearsBox['accel_high'][6],
+			'accel_low':  GearsBox['accel_low' ][6],
+			'low_speed':  GearsBox['low_speed' ][6],
+			'max_speed':  GearsBox['max_speed' ][6] 
 		},
 }
 
-func set_track_torque(left_torque: float, right_torque: float) -> void:
-	var left := left_torque * torque
-	var right := right_torque * torque
-	if left_track_hub and left_track_hub.has_method("apply_engine_torque"):
-		left_track_hub.apply_engine_torque(left)
-	if right_track_hub and right_track_hub.has_method("apply_engine_torque"):
-		right_track_hub.apply_engine_torque(right)
+func set_track_accel(left_accel_mult: float, right_accel_mult: float) -> void:
+	var left := left_accel_mult * accel
+	var right := right_accel_mult * accel
+	if left_track_hub and left_track_hub.has_method("apply_engine_accel"):
+		left_track_hub.apply_engine_accel(left)
+	if right_track_hub and right_track_hub.has_method("apply_engine_accel"):
+		right_track_hub.apply_engine_accel(right)
 
 
 ## Apply raw torque in N·m to both tracks (no gear scaling). Used for braking.
@@ -169,37 +180,69 @@ func apply_brake_right(brake: float) -> void:
 
 
 func _apply_current_gear() -> void:
-	var data = Gears.get(gear, null)
+	_apply_gear(gear)
+
+func _apply_gear(loadGear: int) -> void:
+	var data = Gears.get(loadGear, null)
 	if data == null:
 		return
-	torque_low = data["torque_low"]
-	torque_high = data["torque_high"]
+	accel_low = data["accel_low"]
+	accel_high = data["accel_high"]
 	low_speed = data["low_speed"]
 	max_speed = data["max_speed"]
 	controller.response(data["name"])
-	var s: float = ( abs(get_track_speed().x) + abs(get_track_speed().y) ) / 2.0
-	# Clamp so torque stays in [torque_low, torque_high]; beyond max_speed we don't add more drive.
-	s = clampf(s, low_speed, max_speed)
-	torque = Globals.remap(low_speed, max_speed, torque_low, torque_high, s)
+	accel = 0.0
+	D.shift(Gears[gear])
+
+
+
+func _compute_accel(avg_speed: float) -> float:
+	var buffer: float = 5.0
+	var drop_factor: float = 0.2
+
+	# Below low_speed - 5: drop acceleration significantly.
+	if avg_speed <= low_speed - buffer:
+		return accel_high * drop_factor
+
+	# From low_speed - 5 up to low_speed: ramp back up to accel_high.
+	if avg_speed < low_speed:
+		return Globals.remap(low_speed - buffer, low_speed, accel_high * drop_factor, accel_high, avg_speed)
+
+	# Between low_speed and max_speed: fade from accel_high to accel_low.
+	if avg_speed <= max_speed:
+		return Globals.remap(low_speed, max_speed, accel_high, accel_low, avg_speed)
+
+	# From max_speed up to max_speed + 5: fade accel_low down to zero.
+	if avg_speed < max_speed + buffer:
+		return Globals.remap(max_speed, max_speed + buffer, accel_low, 0.0, avg_speed)
+
+	# Above max_speed + 5: stop acceleration.
+	return 0.0
 
 func shiftUp() -> void:
 	if gear >= 4:
 		print("Max Gear")
 		return
 	gear += 1
-	_apply_current_gear()
-	D.shift(Gears[gear])
+	shiftByDelay()
 	print("Shift Up to Gear ", gear)
-
 
 func shiftDown() -> void:
 	if gear <= -2:
 		print("Min Gear")
 		return
 	gear -= 1
-	_apply_current_gear()
-	D.shift(Gears[gear])
+	shiftByDelay()
 	print("Shift Down to Gear ", gear)
+
+func shiftByDelay() -> void:
+	_apply_gear(0)
+	isShifting = true
+	$Timer.start()
+
+func shiftTimout() -> void:
+	isShifting = false
+	_apply_current_gear()
 
 
 func _physics_process(_delta: float) -> void:
@@ -208,14 +251,6 @@ func _physics_process(_delta: float) -> void:
 	var track_speed := get_track_speed()
 	var avg_speed : float = (abs(track_speed.x) + abs(track_speed.y)) / 2.0
 
-	# Update torque from current speed every frame so the gear torque curve applies (e.g. gear 2+ can pull past 10 m/s).
-	# _apply_current_gear()
-
-	# Enforce current gear max speed on both tracks.
-	if left_track_hub and left_track_hub.has_method("set_max_speed_limit"):
-		left_track_hub.set_max_speed_limit(max_speed)
-	if right_track_hub and right_track_hub.has_method("set_max_speed_limit"):
-		right_track_hub.set_max_speed_limit(max_speed)
 
 	var throttle := Globals.throttle()
 	var steer := Globals.steer(false)
@@ -223,9 +258,23 @@ func _physics_process(_delta: float) -> void:
 
 
 
+
+
 	var reaction := get_drive_reaction()
 	D.writeStat("Reaction: ", reaction.x, ", ")
 	D.writeStat("", reaction.y)
+
+	if gear == 0 or gear == -2 and not isShifting:
+		soundEmitter.engineAudio(throttle, D)
+	elif not isShifting:
+		soundEmitter.engineAudio( clampf( Globals.remap(low_speed, max_speed+5, 0.0, .75, avg_speed), 0.0, 1.0 ) 
+				* (throttle + abs(steer)*.7) 
+				+ throttle*0.25
+				# - (abs(reaction.x) + abs(reaction.y))*0.25
+				, D)
+	else:
+		soundEmitter.engineAudio(0.0, D)
+
 
 	if gear >= 1:
 		pass
@@ -241,24 +290,25 @@ func _physics_process(_delta: float) -> void:
 	D.brake(brake)
 	D.steer(steer)
 
-	var steer_fac       := clampf( Globals.remap(5, 10, 1, 0, avg_speed), 0, 1 )
-	var steer_fac_brake := clampf( Globals.remap(5, 10, 0, 1, avg_speed), 0, 1 )
+	accel = _compute_accel(avg_speed)
 
-	
-	
-	
-	
-	var left_torque  := throttle + steer * 0.75 * steer_fac
-	var right_torque := throttle - steer * 0.75 * steer_fac
-	
-	set_track_torque(left_torque, right_torque)
+	# Steering as a constant left/right speed offset (keeps total accel symmetric).
+	var steer_offset: float = steer * 0.75
 
-	apply_brake_left	( -steer * steer_fac_brake * .99 )
-	apply_brake_right	( +steer * steer_fac_brake * .99 )
+	# Yaw-rate counter-steering (local Y axis angular velocity).
+	var yaw_omega_y: float = tankFrame.angular_velocity.dot(tankFrame.global_transform.basis.y)
+	var yaw_counter: float = clampf(yaw_omega_y * 0.25, -1.0, 1.0) * abs(steer)
+
+	var left_accel_mult: float = throttle + steer_offset - yaw_counter
+	var right_accel_mult: float = throttle - steer_offset + yaw_counter
+
+	set_track_accel(left_accel_mult, right_accel_mult)
 
 
-	D.writeStat("Torque: ", left_torque, ", ")
-	D.writeStat("", right_torque)
+	var left_accel_cmd: float = left_accel_mult * accel
+	var right_accel_cmd: float = right_accel_mult * accel
+	D.writeStat("Accel: ", left_accel_cmd, ", ")
+	D.writeStat("", right_accel_cmd)
 
 	D.writeStat("Track Speed: ", track_speed.x, " m/s, ")
 	D.writeStat("", track_speed.y, " m/s\n")
@@ -272,19 +322,19 @@ func _physics_process(_delta: float) -> void:
 
 
 	D.writeStat("Max Speed: ", Gears[gear]['max_speed'], " m/s\n")
-	D.writeStat("Torque: ", Gears[gear]['torque_low'], " -")
-	D.writeStat("", torque, " -")
-	D.writeStat("", Gears[gear]['torque_high'], " Nm\n")
+	D.writeStat("Accel: ", Gears[gear]['accel_high'], " -")
+	D.writeStat("", accel, " -")
+	D.writeStat("", Gears[gear]['accel_low'], " m/s\n")
 
 
 	if brake > 0.0:
 		apply_brake(brake, brake)
 
+	if not isShifting:
+		if Input.is_action_just_pressed("Gear Up"):
+			shiftUp()
 
-	if Input.is_action_just_pressed("Gear Up"):
-		shiftUp()
-
-	if Input.is_action_just_pressed("Gear Down"):
-		shiftDown()
+		if Input.is_action_just_pressed("Gear Down"):
+			shiftDown()
 
 	D.close()

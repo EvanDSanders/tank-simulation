@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://b3xocnbhycxo6"]
+
+[ext_resource type="Script" uid="uid://cadis41uqyneh" path="res://Scripts/engine_sound.gd" id="1_o8tms"]
+
+[sub_resource type="AudioStreamPolyphonic" id="AudioStreamPolyphonic_mv7o4"]
+polyphony = 4
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" unique_id=2041921024]
+stream = SubResource("AudioStreamPolyphonic_mv7o4")
+volume_db = -2.0
+autoplay = true
+max_polyphony = 4
+playback_type = 1
+script = ExtResource("1_o8tms")

@@ -73,8 +73,11 @@ func input(isRight: bool) -> float:
 	return power + stear
 
 
+var idleTimer := 0.0
+var engineAudio
 func throttle() -> float:
 	return Input.get_action_strength("Drive")
+
 
 func brake() -> float:
 	return Input.get_action_strength("Reverse")
@@ -86,7 +89,18 @@ func steer(isRight: bool) -> float:
 	return Input.get_axis("Turn " + sideL, "Turn " + sideR)
 	
 	
-
+func _process(delta: float) -> void:
+	if (
+		Input.get_action_strength("Drive") != 0.0 or
+		Input.get_action_strength("Reverse") != 0.0 or
+		Input.get_axis("Turn L", "Turn R") != 0.0
+	):
+		idleTimer = 0.0
+		engineAudio._resume()
+	else:
+		idleTimer += delta
+		if idleTimer > 10.0:
+			engineAudio._pause()
 
 
 func configure(object: Node3D):

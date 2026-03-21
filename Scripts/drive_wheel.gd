@@ -48,6 +48,39 @@ func _apply_engine_torque(state: PhysicsDirectBodyState3D, spin_axis: Vector3, h
 	state.angular_velocity += (state.inverse_inertia_tensor * torque_vec) * state.step
 
 
+func _apply_engine_acceleration(
+	state: PhysicsDirectBodyState3D,
+	spin_axis: Vector3,
+	hub: Node,
+	drive_radius: float,
+) -> void:
+	var engine_accel: float = 0.0
+	if hub.has_method("take_engine_accel"):
+		engine_accel = hub.take_engine_accel()
+	if engine_accel == 0.0:
+		return
+
+	if drive_radius == 0.0:
+		return
+
+	# Convert desired linear acceleration at the tread radius into torque about the spin axis.
+	var invI_scalar: float = spin_axis.dot(state.inverse_inertia_tensor * spin_axis)
+	if invI_scalar == 0.0:
+		return
+
+	var torque: float = engine_accel / (drive_radius * invI_scalar)
+	var torque_vec: Vector3 = spin_axis * torque
+
+	# Custom integrator: Jolt doesn't integrate apply_torque, so add torque effect ourselves.
+	state.angular_velocity += (state.inverse_inertia_tensor * torque_vec) * state.step
+
+	# Reaction torque to the tank tracks (like spinning wheels in the air).
+	var track_body: RigidBody3D = hub.trackBody
+	if is_instance_valid(track_body):
+		var local_x := track_body.global_transform.basis.x
+		track_body.apply_torque_impulse(local_x * (-torque * state.step))
+
+
 func _constrain_road_wheels(road_wheels: Array, consensus_speed: float) -> void:
 	var r: float = ROAD_WHEEL_RADIUS
 	var I_axial: float = 0.5 * r * r  # cylinder I = 0.5*m*r^2, factor without m
@@ -97,7 +130,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	var target_spin_drive: float = consensus / drive_radius
 	state.angular_velocity = other_rot + spin_axis * target_spin_drive
 
-	# Apply engine torque (must integrate manually when using custom_integrator).
+	# Apply drive acceleration (converted to torque) and any braking torque.
+	_apply_engine_acceleration(state, spin_axis, _hub, drive_radius)
 	_apply_engine_torque(state, spin_axis, _hub)
 
 	_constrain_road_wheels(road_wheels, consensus)
