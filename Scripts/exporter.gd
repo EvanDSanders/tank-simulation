@@ -29,6 +29,12 @@ func _physics_process(_delta: float) -> void:
 					'angle R': engine.right_track_hub.get_track_angle(),
 					'speed L': engine.left_track_hub.get_track_speed(),
 					'speed R': engine.right_track_hub.get_track_speed(),
+					
+					'Power': Globals.throttle(),
+					'Steer': Globals.steer(false),
+					'Brake': Globals.brake(),
+					'Gear': engine.gear,
+					'Is Shifting': engine.isShifting,
 				}
 			}
 			# for each in parts:

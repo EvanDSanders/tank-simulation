@@ -63,11 +63,6 @@ _subresources={
 "generate/physics": true,
 "physics/layer": 3,
 "physics/mask": 3
-},
-"PATH:Plane_004": {
-"generate/physics": true,
-"physics/layer": 3,
-"physics/mask": 3
 }
 }
 }

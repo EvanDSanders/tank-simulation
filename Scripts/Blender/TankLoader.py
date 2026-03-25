@@ -20,6 +20,7 @@ GODOT_TO_BLENDER = mathutils.Matrix((
 
 tank = None
 rig = bpy.data.objects["Tank Bones"]
+IS_BAKING = False
 
 
 def load():
@@ -72,13 +73,30 @@ def set_bones_pose(frame_data):
         if key not in rig.pose.bones:
             continue
 
-        pos     = godot_to_blender_pos(value[0])
-        rot     = godot_to_blender_rot(value[1])
-        world_m = rot.to_4x4()
-        world_m.translation = pos
+        # Support both list format [[x,y,z],[x,y,z,w]]
+        # and dict format {"0":[...],"1":[...]} / {"pos":[...],"rot":[...]}.
+        pos_data = None
+        rot_data = None
+        if isinstance(value, (list, tuple)) and len(value) >= 2:
+            pos_data = value[0]
+            rot_data = value[1]
+        elif isinstance(value, dict):
+            pos_data = value.get(0, value.get("0", value.get("pos", value.get("position"))))
+            rot_data = value.get(1, value.get("1", value.get("rot", value.get("rotation"))))
 
-        # pose_bone.matrix is in armature local space
-        rig.pose.bones[key].matrix = arm_inv @ world_m
+        if pos_data is None or rot_data is None:
+            continue
+
+        try:
+            pos = godot_to_blender_pos(pos_data)
+            rot = godot_to_blender_rot(rot_data)
+            world_m = rot.to_4x4()
+            world_m.translation = pos
+
+            # pose_bone.matrix is in armature local space
+            rig.pose.bones[key].matrix = arm_inv @ world_m
+        except (KeyError, IndexError, TypeError, ValueError) as ex:
+            print(f"Skipping malformed transform for bone '{key}': {ex}")
 
 
 def apply_pose_to_edit_bones():
@@ -131,6 +149,9 @@ def apply_pose_to_edit_bones():
 
 def importer(frame: int, externalLoader: bool = False):
     global tank
+    if tank is None:
+        return
+
     if frame == 0 and not externalLoader:
         load()
 
@@ -140,40 +161,104 @@ def importer(frame: int, externalLoader: bool = False):
 
     print(f"Importing frame {frame}")
 
+    frame_payload = tank.get(frame_str, {})
+    if not isinstance(frame_payload, dict):
+        print(f"Skipping frame {frame}: payload is not a dict")
+        return
+
+    bones = frame_payload.get('bones')
+    stats = frame_payload.get('stats')
+    if not isinstance(bones, dict):
+        print(f"Skipping frame {frame}: missing/invalid 'bones'")
+        return
+    if not isinstance(stats, dict):
+        print(f"Skipping frame {frame}: missing/invalid 'stats'")
+        return
+
     # On frame 0, create any bones that don't exist yet.
     if frame == 0:
-        ensure_bones_exist(tank[frame_str]['bones'])
+        ensure_bones_exist(bones)
 
     # Use the same global-matrix technique for every frame (including 0).
-    set_bones_pose(tank[frame_str]['bones'])
+    set_bones_pose(bones)
 
-    bpy.data.node_groups["TankAngleProvider"].nodes["Switch.004"].inputs[1].default_value = tank[frame_str]['stats']['angle L']
-    bpy.data.node_groups["TankAngleProvider"].nodes["Switch.004"].inputs[2].default_value = tank[frame_str]['stats']['angle R']
+    angle_l = stats.get('angle L')
+    angle_r = stats.get('angle R')
+    if angle_l is not None:
+        bpy.data.node_groups["TankAngleProvider"].nodes["Switch.004"].inputs[1].default_value = angle_l
+    if angle_r is not None:
+        bpy.data.node_groups["TankAngleProvider"].nodes["Switch.004"].inputs[2].default_value = angle_r
 
     # Frame 0: bake pose into edit bones so placement matches in Edit Mode.
-    if frame == 0:
-        apply_pose_to_edit_bones()
+    # if frame == 0:
+        # apply_pose_to_edit_bones()
 
-    
+def _keyframe_current_pose_and_stats(frame: int):
+    """Insert keyframes for current rig pose and tank stat-driven node values."""
+    for pose_bone in rig.pose.bones:
+        pose_bone.rotation_mode = 'QUATERNION'
+        pose_bone.keyframe_insert(data_path="location", frame=frame)
+        pose_bone.keyframe_insert(data_path="rotation_quaternion", frame=frame)
+        pose_bone.keyframe_insert(data_path="scale", frame=frame)
+
+    switch = bpy.data.node_groups["TankAngleProvider"].nodes["Switch.004"]
+    switch.inputs[1].keyframe_insert(data_path="default_value", frame=frame)
+    switch.inputs[2].keyframe_insert(data_path="default_value", frame=frame)
+
+
+def bake_animation():
+    """Bake all frames from JSON onto the rig and node input sockets."""
+    global tank, IS_BAKING
+    if tank is None:
+        return
+
+    frame_numbers = sorted(int(k) for k in tank.keys() if str(k).isdigit())
+    if not frame_numbers:
+        return
+
+    ensure_bones_exist(tank[str(frame_numbers[0])]['bones'])
+
+    scene = bpy.context.scene
+    prev_frame = scene.frame_current
+    scene.frame_start = frame_numbers[0]
+    scene.frame_end = frame_numbers[-1]
+
+    IS_BAKING = True
+    try:
+        # Avoid frame_set() in the main loop. It can trigger handlers/depsgraph work
+        # repeatedly and appear to hang on long bakes.
+        for frame in frame_numbers:
+            importer(frame, True)
+            _keyframe_current_pose_and_stats(frame)
+    finally:
+        IS_BAKING = False
+        scene.frame_set(prev_frame)
 
 
 if not useLive:
     load()
+    bake_animation()
 import time
 
 def on_frame_change(scene):
     start_time = time.time()
-    global tank
-    if useLive:
-        if os.path.isfile(SHARED_STATE_PATH):
-            try:
-                with open(SHARED_STATE_PATH, "r") as f:
-                    tank = json.load(f)
-                importer(0, True)
-            except (json.JSONDecodeError, OSError):
-                pass
-    else:
-        importer(scene.frame_current)
+    global tank, IS_BAKING
+    if IS_BAKING:
+        return
+    try:
+        if useLive:
+            if os.path.isfile(SHARED_STATE_PATH):
+                try:
+                    with open(SHARED_STATE_PATH, "r") as f:
+                        tank = json.load(f)
+                    importer(0, True)
+                except (json.JSONDecodeError, OSError):
+                    pass
+        else:
+            importer(scene.frame_current)
+    except Exception as ex:
+        # Never allow frame handler exceptions to wedge playback/export workflow.
+        print(f"TankLoader handler error (frame {scene.frame_current}): {ex}")
         
     end_time = time.time()
     print(f"Frame change took {end_time - start_time} seconds")
@@ -188,7 +273,8 @@ for _h in list(_handlers):
         except ValueError:
             pass
 
-if not any(
+# Offline mode bakes immediately; only add handler in live mode.
+if useLive and not any(
     getattr(_h, "__name__", None) == "on_frame_change" and getattr(_h, "__module__", None) == _this_module
     for _h in _handlers
 ):
